@@ -1,0 +1,7 @@
+{
+	"type": "module",
+	"dependencies": {
+		"chatgpt": "^0.4.1",
+		"discord.js": "^14.7.1"
+	}
+}
