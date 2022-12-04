@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { api } from '../bot.js';
-import { delay } from 'delay'
+import delay from 'delay'
 
 const prompt = {
     command: new SlashCommandBuilder()
