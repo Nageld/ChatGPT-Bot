@@ -19,14 +19,14 @@ export default prompt
 
 const queue = []
 export async function processQueueLoop() {
-    while (true) {
+    do {
         const thing = queue.pop()
         if (thing) {
             const { input, interaction } = thing
             const response = await api.sendMessage(input)
             await interaction.editReply(`> ${input}\n${response}`.substring(0, 2000))
         } else {
-            delay(1000)
+            await delay(1000)
         }
-    }
+    } while (true)
 }
