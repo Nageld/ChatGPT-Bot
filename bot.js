@@ -8,12 +8,10 @@ export const api = new ChatGPTAPI({ headless: true })
 await api.init({ auth: 'blocking' })
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-let promptCommand = prompt.command
-let resetCommand = reset.command
 
 client.commands = new Collection();
-client.commands.set(promptCommand.name, prompt)
-client.commands.set(resetCommand.name, reset)
+client.commands.set(prompt.command.name, prompt)
+client.commands.set(reset.command.name, reset)
 
 client.once(Events.ClientReady, () => {
     console.log('Ready!');
