@@ -8,7 +8,7 @@ const reset = {
     async execute(interaction) {
         await api.close()
         await api.init()
-        await interaction.reply("The Eye has forgotten");
+        await interaction.reply("The Eye has forgotten.");
     },
 };
 export default reset
