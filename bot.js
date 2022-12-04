@@ -9,9 +9,9 @@ await api.init({ auth: 'blocking' })
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.commands = new Collection();
-client.commands.set(prompt.command.name, prompt)
-client.commands.set(reset.command.name, reset)
+const commands = new Collection();
+commands.set(prompt.command.name, prompt)
+commands.set(reset.command.name, reset)
 
 client.once(Events.ClientReady, () => {
     console.log('Ready!');
@@ -20,7 +20,7 @@ client.once(Events.ClientReady, () => {
 
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
-    const command = client.commands.get(interaction.commandName);
+    const command = commands.get(interaction.commandName);
     if (!command) return;
 
     try {
