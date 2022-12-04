@@ -1,5 +1,5 @@
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import config from './config.json' assert { type: 'json' };;
+import config from './config.json' assert { type: 'json' };
 import prompt, { processQueueLoop } from './commands/prompt.js'
 import reset from './commands/reset.js'
 import { ChatGPTAPI } from 'chatgpt';
