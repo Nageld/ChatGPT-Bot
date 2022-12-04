@@ -20,9 +20,9 @@ export default prompt
 const queue = []
 export async function processQueueLoop() {
     do {
-        const thing = queue.pop()
-        if (thing) {
-            const { input, interaction } = thing
+        const request = queue.pop()
+        if (request) {
+            const { input, interaction } = request
             const response = await api.sendMessage(input)
             await interaction.editReply(`> ${input}\n${response}`.substring(0, 2000))
         } else {
