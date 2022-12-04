@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
-
 import { api } from '../bot.js'
+
 const reset = {
     command: new SlashCommandBuilder()
         .setName('reset')
