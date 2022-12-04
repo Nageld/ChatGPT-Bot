@@ -1,19 +1,19 @@
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 import settings from './config.json' assert { type: 'json' };;
-import command from './commands/server.js'
+import prompt from './commands/prompt.js'
 import reset from './commands/reset.js'
-import {ChatGPTAPI} from 'chatgpt';
+import { ChatGPTAPI } from 'chatgpt';
 
-const api = new ChatGPTAPI({headless:true})
+export const api = new ChatGPTAPI({ headless: true })
 await api.init({ auth: 'blocking' })
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-let command2 = command.command
-let command3 = reset.command
+let promptCommand = prompt.command
+let resetCommand = reset.command
 
 client.commands = new Collection();
-client.commands.set(command2.name, command)
-client.commands.set(command3.name, reset)
+client.commands.set(promptCommand.name, prompt)
+client.commands.set(resetCommand.name, reset)
 
 client.once(Events.ClientReady, () => {
     console.log('Ready!');
@@ -25,13 +25,10 @@ client.on(Events.InteractionCreate, async interaction => {
     if (!command) return;
 
     try {
-        await command.execute(interaction, api);
+        await command.execute(interaction);
     } catch (error) {
         console.error(error);
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-    }
-    if (interaction.commandName == "reset") {
-        api.init()
     }
 });
 
