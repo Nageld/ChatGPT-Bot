@@ -6,12 +6,12 @@ import image from './commands/image.js'
 import { ChatGPTAPI } from 'chatgpt';
 import { Configuration, OpenAIApi } from 'openai';
 
-await api.init({ auth: 'blocking' })
 const configuration = new Configuration({
     apiKey:  config.openai,
 });
 export const openai = new OpenAIApi(configuration);
 export const api = new ChatGPTAPI({ headless: true })
+await api.init({ auth: 'blocking' })
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
