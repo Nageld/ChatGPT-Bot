@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { api } from '../bot.js'
 
+import { api } from '../bot.js'
 const reset = {
     command: new SlashCommandBuilder()
         .setName('reset')
@@ -8,7 +8,7 @@ const reset = {
     async execute(interaction) {
         await api.close()
         await api.init()
-        await interaction.reply("The eye has forgotten");
+        await interaction.reply("The Eye has forgotten");
     },
 };
 export default reset
