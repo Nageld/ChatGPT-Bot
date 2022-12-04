@@ -1,6 +1,6 @@
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 import settings from './config.json' assert { type: 'json' };;
-import prompt from './commands/prompt.js'
+import prompt, { processQueueLoop } from './commands/prompt.js'
 import reset from './commands/reset.js'
 import { ChatGPTAPI } from 'chatgpt';
 
@@ -15,6 +15,7 @@ client.commands.set(reset.command.name, reset)
 
 client.once(Events.ClientReady, () => {
     console.log('Ready!');
+    processQueueLoop()
 });
 
 client.on(Events.InteractionCreate, async interaction => {
