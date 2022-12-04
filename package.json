@@ -2,6 +2,7 @@
 	"type": "module",
 	"dependencies": {
 		"chatgpt": "^0.4.1",
+		"delay": "^5.0.0",
 		"discord.js": "^14.7.1"
 	}
 }

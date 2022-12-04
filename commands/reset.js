@@ -1,13 +1,14 @@
 import { SlashCommandBuilder } from 'discord.js';
-
+import { api } from '../bot.js'
 
 const reset = {
-        command: new SlashCommandBuilder()
+    command: new SlashCommandBuilder()
         .setName('reset')
         .setDescription('Reset the bots knowledge'),
-    async execute(interaction, api) {
+    async execute(interaction) {
         await api.close()
-        return interaction.reply("The eye has forgotten");
+        await api.init()
+        await interaction.reply("The Eye has forgotten.");
     },
 };
 export default reset
