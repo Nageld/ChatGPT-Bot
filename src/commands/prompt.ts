@@ -21,7 +21,7 @@ export default createCommand(
             .split("\n")
             .map((x) => `> ${x}`)
             .join("\n");
-        await interaction.reply(`> ${inputFormatted}`.substring(0, 2000));
+        await interaction.reply(inputFormatted.substring(0, 2000));
         queue.push({ input, interaction } as QueueItem);
     }
 );

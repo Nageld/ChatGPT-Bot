@@ -15,7 +15,7 @@ export default createCommand(
             .split("\n")
             .map((x) => `> ${x}`)
             .join("\n");
-        await interaction.reply(`${inputFormatted}`.substring(0, 2000));
+        await interaction.reply(inputFormatted.substring(0, 2000));
         const response = await openai.createImage({
             prompt: input,
             n: 1,
