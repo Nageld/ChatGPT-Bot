@@ -5,4 +5,4 @@ import { loadConfig } from "./utils.js";
 const config = loadConfig();
 
 export const openai = new OpenAIApi(new Configuration({ apiKey: config.openai }));
-export const chatgpt = new ChatGPTAPI({ headless: true });
+export const chatgpt = new ChatGPTAPI({ sessionToken: config.chatgpt });

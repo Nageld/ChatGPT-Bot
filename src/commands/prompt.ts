@@ -22,7 +22,11 @@ export default createCommand(
             .map((x) => `> ${x}`)
             .join("\n");
         await interaction.reply(inputFormatted.substring(0, 2000));
-        queue.push({ input, interaction } as QueueItem);
+        // queue.push({ input, interaction } as QueueItem);
+            await interaction.editReply(`${inputFormatted}\nProcessing...`.substring(0, 2000));
+            const response = await chatgpt.sendMessage(input);
+            console.log(response)
+            await interaction.editReply(`${inputFormatted}\n${response}`.substring(0, 2000));
     }
 );
 
