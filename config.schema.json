@@ -21,10 +21,6 @@
             "description": "The ID of the guild to use for the bot"
         }
     },
-    "required": [
-        "token",
-        "clientId",
-        "guildId"
-    ],
+    "required": ["token", "clientId", "guildId"],
     "additionalProperties": false
 }
