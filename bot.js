@@ -1,11 +1,11 @@
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 import config from './config.json' assert { type: 'json' };
 import { ChatGPTAPI } from 'chatgpt';
-import { OpenAIApi } from 'openai';
+import { OpenAIApi, Configuration } from 'openai';
 import { processQueueLoop } from './commands/prompt.js'
 import { readdirSync } from 'fs';
 
-export const openai = new OpenAIApi({ apiKey: config.openai });
+export const openai = new OpenAIApi(new Configuration({ apiKey: config.openai }));
 export const chatgpt = new ChatGPTAPI({ headless: true })
 await chatgpt.init({ auth: 'blocking' })
 
