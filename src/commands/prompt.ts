@@ -22,7 +22,7 @@ export default createCommand(
     }
 );
 
-export async function processQueueLoop() {
+export const processQueueLoop = async () => {
     do {
         const request = queue.pop();
         if (request) {
@@ -34,4 +34,4 @@ export async function processQueueLoop() {
             await delay(1000);
         }
     } while (true);
-}
+};
