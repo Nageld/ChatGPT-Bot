@@ -2,7 +2,7 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { readdirSync, readFileSync } from "fs";
 import { Command, Builder } from "./types.js";
 
-export const loadConfig = async () => JSON.parse(readFileSync("../config.json", "utf-8"));
+export const loadConfig = () => JSON.parse(readFileSync("../config.json", "utf-8"));
 
 export const createCommand = (
     build: (builder: SlashCommandBuilder) => Builder,
