@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "build": "tsc",
-        "run": "tsc && node dist",
+        "start": "tsc && cd dist && node .",
         "prettify": "prettier --write . --plugin-search-dir=. --ignore-unknown",
         "lint": "eslint --cache ."
     },

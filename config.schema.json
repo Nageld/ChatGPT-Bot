@@ -1,0 +1,30 @@
+{
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "token": {
+            "type": "string",
+            "description": "The bot token to use to login to Discord"
+        },
+        "openai": {
+            "type": "string",
+            "description": "The OpenAI API key to use to generate image responses"
+        },
+        "clientId": {
+            "type": "string",
+            "description": "The client ID of the bot"
+        },
+        "guildId": {
+            "type": "string",
+            "description": "The ID of the guild to use for the bot"
+        }
+    },
+    "required": [
+        "token",
+        "clientId",
+        "guildId"
+    ],
+    "additionalProperties": false
+}
