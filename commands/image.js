@@ -1,12 +1,11 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { openai } from '../bot.js';
 
 const image = {
     data: new SlashCommandBuilder()
         .setName('image')
         .setDescription('Prompt for the bot')
         .addStringOption(option => option.setName('input').setDescription('The image description')),
-    async execute(interaction) {
+    async execute(interaction, openai, chatgpt) {
         const input = interaction.options.getString('input');
         await interaction.reply(`> ${input}`.substring(0, 2000))
         const response = await openai.createImage({

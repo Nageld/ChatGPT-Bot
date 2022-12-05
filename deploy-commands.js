@@ -1,8 +1,6 @@
 import { REST, Routes } from 'discord.js';
 import config from './config.json' assert { type: 'json' };
 import { readdirSync } from 'fs';
-// lol
-import './bot.js'
 
 const commands = [];
 // Grab all the command files from the commands directory you created earlier
