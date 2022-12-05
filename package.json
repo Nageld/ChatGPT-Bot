@@ -5,8 +5,10 @@
     "type": "module",
     "scripts": {
         "build": "tsc",
+        "deploy-cmd": "tsc && cd dist && node deploy-commands.js",
         "start": "tsc && cd dist && node .",
         "prettify": "prettier --write . --plugin-search-dir=. --ignore-unknown",
+        "pm2": "pm2 start \"pnpm start\"",
         "lint": "eslint --cache ."
     },
     "dependencies": {

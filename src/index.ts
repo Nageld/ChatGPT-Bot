@@ -1,20 +1,14 @@
-import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
+import { Client, Events, GatewayIntentBits } from "discord.js";
 import { processQueueLoop } from "./commands/prompt.js";
 import { readdirSync } from "fs";
 import { chatgpt } from "./apis.js";
-import { loadConfig } from "./utils.js";
+import { collectCommands, loadConfig } from "./utils.js";
 
 await chatgpt.init({ auth: "blocking" });
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.commands = new Collection();
-const commandFiles = readdirSync("./commands").filter((file) => file.endsWith(".js"));
-
-for (const file of commandFiles) {
-    const command = await import(`./commands/${file}`);
-    client.commands.set(command.default.data.name, command.default);
-}
+const commands = Object.fromEntries((await collectCommands()).map((command) => [command.data.name, command]));
 
 client.once(Events.ClientReady, () => {
     console.log("Ready!");
@@ -23,7 +17,7 @@ client.once(Events.ClientReady, () => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
-    const command = client.commands.get(interaction.commandName);
+    const command = commands[interaction.commandName];
     if (!command) return;
 
     try {
