@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import { openai } from '../bot.js';
 
 const image = {
-    command: new SlashCommandBuilder()
+    data: new SlashCommandBuilder()
         .setName('image')
         .setDescription('Prompt for the bot')
         .addStringOption(option => option.setName('input').setDescription('The image description')),

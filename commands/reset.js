@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import { chatgpt } from '../bot.js'
 
 const reset = {
-    command: new SlashCommandBuilder()
+    data: new SlashCommandBuilder()
         .setName('reset')
         .setDescription('Reset the bots knowledge'),
     async execute(interaction) {

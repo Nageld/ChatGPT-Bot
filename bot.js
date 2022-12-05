@@ -13,9 +13,9 @@ await chatgpt.init({ auth: 'blocking' })
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const commands = new Collection();
-commands.set(prompt.command.name, prompt)
-commands.set(reset.command.name, reset)
-commands.set(image.command.name, image)
+commands.set(prompt.data.name, prompt)
+commands.set(reset.data.name, reset)
+commands.set(image.data.name, image)
 
 client.once(Events.ClientReady, () => {
     console.log('Ready!');

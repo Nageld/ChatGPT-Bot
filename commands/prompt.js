@@ -3,7 +3,7 @@ import { chatgpt } from '../bot.js';
 import delay from 'delay'
 
 const prompt = {
-    command: new SlashCommandBuilder()
+    data: new SlashCommandBuilder()
         .setName('prompt')
         .setDescription('Prompt for the bot')
         .addStringOption(option => option.setName('input').setDescription('The prompt')),
