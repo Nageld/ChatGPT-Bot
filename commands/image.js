@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { openai } from '../bot';
+import { openai } from '../bot.js';
 
 const image = {
     command: new SlashCommandBuilder()

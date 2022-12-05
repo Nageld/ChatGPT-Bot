@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { chatgpt } from '../bot';
+import { chatgpt } from '../bot.js';
 import delay from 'delay'
 
 const prompt = {
