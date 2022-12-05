@@ -31,9 +31,9 @@ export const processQueueLoop = async () => {
                 .split("\n")
                 .map((x) => `> ${x}`)
                 .join("\n");
-            await interaction.editReply(`> ${inputFormatted}\nProcessing...`.substring(0, 2000));
+            await interaction.editReply(`${inputFormatted}\nProcessing...`.substring(0, 2000));
             const response = await chatgpt.sendMessage(input);
-            await interaction.editReply(`> ${inputFormatted}\n${response}`.substring(0, 2000));
+            await interaction.editReply(`${inputFormatted}\n${response}`.substring(0, 2000));
         } else {
             await delay(1000);
         }
