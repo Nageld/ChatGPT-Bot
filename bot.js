@@ -1,12 +1,9 @@
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 import config from './config.json' assert { type: 'json' };
-import { ChatGPTAPI } from 'chatgpt';
-import { OpenAIApi, Configuration } from 'openai';
 import { processQueueLoop } from './commands/prompt.js'
 import { readdirSync } from 'fs';
+import { chatgpt } from './apis.js';
 
-export const openai = new OpenAIApi(new Configuration({ apiKey: config.openai }));
-export const chatgpt = new ChatGPTAPI({ headless: true })
 await chatgpt.init({ auth: 'blocking' })
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -30,7 +27,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	if (!command) return;
 
 	try {
-		await command.execute(interaction, openai, chatgpt);
+		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
