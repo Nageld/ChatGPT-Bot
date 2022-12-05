@@ -1,17 +1,14 @@
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 import config from './config.json' assert { type: 'json' };
-import prompt, { processQueueLoop } from './commands/prompt.js'
-import reset from './commands/reset.js'
-import image from './commands/image.js'
+import prompt, { processQueueLoop } from './commands/prompt'
+import reset from './commands/reset'
+import image from './commands/image'
 import { ChatGPTAPI } from 'chatgpt';
-import { Configuration, OpenAIApi } from 'openai';
+import { OpenAIApi } from 'openai';
 
-const configuration = new Configuration({
-    apiKey:  config.openai,
-});
-export const openai = new OpenAIApi(configuration);
-export const api = new ChatGPTAPI({ headless: true })
-await api.init({ auth: 'blocking' })
+export const openai = new OpenAIApi({ apiKey: config.openai });
+export const chatgpt = new ChatGPTAPI({ headless: true })
+await chatgpt.init({ auth: 'blocking' })
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 

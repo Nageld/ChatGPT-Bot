@@ -1,23 +1,20 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { openai } from '../bot.js';
+import { openai } from '../bot';
 
 const image = {
-        command: new SlashCommandBuilder()
+    command: new SlashCommandBuilder()
         .setName('image')
         .setDescription('Prompt for the bot')
         .addStringOption(option => option.setName('input').setDescription('The image description')),
     async execute(interaction) {
-        const value = interaction.options.getString('input');     
-        interaction.reply(value)
+        const input = interaction.options.getString('input');
+        await interaction.reply(`> ${input}`.substring(0, 2000))
         const response = await openai.createImage({
-            prompt: value,
-            n:1,
-            size:"1024x1024"
-          });
-        let output = response.length + value.length > 1980 ? 
-        response.substring(0, 2000-value.length-20): 
-        response.data.data[0].url;
-        return interaction.editReply("Prompt: " +value+ "\n"+output);
+            prompt: input,
+            n: 1,
+            size: "1024x1024"
+        });
+        await interaction.editReply(`> ${input}\n${response.data.data[0].url}`.substring(0, 2000))
     },
 };
 export default image

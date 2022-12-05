@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { api } from '../bot.js';
+import { chatgpt } from '../bot';
 import delay from 'delay'
 
 const prompt = {
@@ -23,7 +23,8 @@ export async function processQueueLoop() {
         const request = queue.pop()
         if (request) {
             const { input, interaction } = request
-            const response = await api.sendMessage(input)
+            await interaction.editReply(`> ${input}\nProcessing...`.substring(0, 2000))
+            const response = await chatgpt.sendMessage(input)
             await interaction.editReply(`> ${input}\n${response}`.substring(0, 2000))
         } else {
             await delay(1000)
