@@ -1,7 +1,7 @@
 import { REST, Routes } from "discord.js";
 import { collectCommands, loadConfig } from "./utils.js";
 
-const config = await loadConfig();
+const config = loadConfig();
 
 const commands = (await collectCommands()).map((command) => command.data);
 

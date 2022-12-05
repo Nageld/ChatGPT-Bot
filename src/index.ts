@@ -32,6 +32,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
-const config = await loadConfig();
+const config = loadConfig();
 
 client.login(config.token);
