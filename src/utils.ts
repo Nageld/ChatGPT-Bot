@@ -22,4 +22,4 @@ export const collectCommands = async () => {
         commands.push(command.default);
     }
     return commands;
-}
+};

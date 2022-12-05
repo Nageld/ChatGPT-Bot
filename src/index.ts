@@ -1,6 +1,5 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import { processQueueLoop } from "./commands/prompt.js";
-import { readdirSync } from "fs";
 import { chatgpt } from "./apis.js";
 import { collectCommands, loadConfig } from "./utils.js";
 
@@ -8,7 +7,9 @@ await chatgpt.init({ auth: "blocking" });
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-const commands = Object.fromEntries((await collectCommands()).map((command) => [command.data.name, command]));
+const commands = Object.fromEntries(
+    (await collectCommands()).map((command) => [command.data.name, command])
+);
 
 client.once(Events.ClientReady, () => {
     console.log("Ready!");
