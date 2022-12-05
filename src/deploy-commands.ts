@@ -1,6 +1,8 @@
 import { REST, Routes } from 'discord.js';
-import config from './config.json' assert { type: 'json' };
 import { readdirSync } from 'fs';
+import { loadConfig } from './utils.js';
+
+const config = await loadConfig();
 
 const commands = [];
 // Grab all the command files from the commands directory you created earlier
@@ -23,7 +25,7 @@ try {
     const data = await rest.put(
         Routes.applicationGuildCommands(config.clientId, config.guildId),
         { body: commands },
-    );
+    ) as {length: number};
 
     console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 } catch (error) {

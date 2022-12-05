@@ -1,8 +1,8 @@
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import config from './config.json' assert { type: 'json' };
 import { processQueueLoop } from './commands/prompt.js'
-import { readdirSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 import { chatgpt } from './apis.js';
+import { loadConfig } from './utils.js';
 
 await chatgpt.init({ auth: 'blocking' })
 
@@ -12,7 +12,7 @@ client.commands = new Collection();
 const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	const command = await import(`./commands/${file}`);
+	const command = await import(`src/commands/${file}`);
 	client.commands.set(command.default.data.name, command.default)
 }
 
@@ -33,5 +33,7 @@ client.on(Events.InteractionCreate, async interaction => {
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
+
+const config = await loadConfig();
 
 client.login(config.token);
