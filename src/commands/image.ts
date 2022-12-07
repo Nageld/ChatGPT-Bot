@@ -1,5 +1,7 @@
 import { openai } from "../apis.js";
 import { createCommand } from "../utils.js";
+import { fetch } from "node-fetch";
+import { AttachmentBuilder } from "discord.js";
 
 export default createCommand(
     (builder) =>
@@ -11,18 +13,18 @@ export default createCommand(
             ),
     async (interaction) => {
         const input = interaction.options.getString("input")!;
+        await interaction.deferReply();
         const inputFormatted = input
             .split("\n")
             .map((x) => `> ${x}`)
             .join("\n");
-        await interaction.reply(inputFormatted.substring(0, 2000));
         const response = await openai.createImage({
             prompt: input,
             n: 1,
             size: "1024x1024"
         });
-        await interaction.editReply(
-            `${inputFormatted}\n${response.data.data[0].url}`.substring(0, 2000)
-        );
+        const imageResponse = await fetch(response.data.data[0].url);
+        const resultAttachment = new AttachmentBuilder(imageResponse.body, { name: "result.png" });
+        await interaction.reply(inputFormatted, { file: [resultAttachment] });
     }
 );
