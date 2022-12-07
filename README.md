@@ -1,6 +1,6 @@
 # ChatGPT-Bot
-![Do da stanky leg](https://img.shields.io/static/v1?label=do%20da&message=stanky%20leg&color=purple&style=for-the-badge)
 
+![Do da stanky leg](https://img.shields.io/static/v1?label=do%20da&message=stanky%20leg&color=purple&style=for-the-badge)
 
 A Discord bot that connects to Chat-GPT to provide conversations with the model via Discord. It also allows for image generation through DALL-E.
 
@@ -35,8 +35,7 @@ pnpm start
 
 ### Commands
 
-- `/prompt` Sends a prompt to Chat-GPT
-- `/image` Generates an image through DALL-E based on the given prompt
-- `/reset` Resets the current conversation with Chat-GPT
-- `/single-prompt` Sends a prompt to Chat-GPT independant from the conversation
-
+-   `/prompt` Sends a prompt to Chat-GPT
+-   `/image` Generates an image through DALL-E based on the given prompt
+-   `/reset` Resets the current conversation with Chat-GPT
+-   `/single-prompt` Sends a prompt to Chat-GPT independant from the conversation
