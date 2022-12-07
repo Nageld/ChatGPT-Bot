@@ -28,7 +28,7 @@ To run the bot run:
 
 ```
 pnpm deploy-cmd
-pnpm run
+pnpm start
 ```
 
 `pnpm deploy-cmd` is only required the first run and will only need to run again if you pull an update.
