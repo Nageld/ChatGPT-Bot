@@ -19,6 +19,10 @@
         "guildId": {
             "type": "string",
             "description": "The ID of the guild to use for the bot"
+        },
+        "chatgpt": {
+            "type": "string",
+            "description": "The session token for the bot to communicate with chatgpt"
         }
     },
     "required": ["token", "openai", "clientId", "guildId"],
