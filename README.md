@@ -38,5 +38,5 @@ pnpm start
 - `/prompt` Sends a prompt to Chat-GPT
 - `/image` Generates an image through DALL-E based on the given prompt
 - `/reset` Resets the current conversation with Chat-GPT
-- `/ask` Sends a prompt to Chat-GPT independant from the conversation
+- `/single-prompt` Sends a prompt to Chat-GPT independant from the conversation
 

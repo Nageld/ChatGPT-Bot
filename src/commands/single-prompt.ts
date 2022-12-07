@@ -4,8 +4,8 @@ import { createCommand } from "../utils.js";
 export default createCommand(
     (builder) =>
         builder
-            .setName("ask")
-            .setDescription("Query a new fresh chatgpt instance")
+            .setName("single-prompt")
+            .setDescription("Send a prompt to a blank chatgpt instance")
             .addStringOption((option) =>
                 option.setName("input").setRequired(true).setDescription("The prompt")
             ),
