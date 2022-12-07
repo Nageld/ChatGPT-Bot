@@ -1,6 +1,6 @@
 import { openai } from "../apis.js";
 import { createCommand } from "../utils.js";
-import { fetch } from "node-fetch";
+import fetch from "node-fetch";
 import { AttachmentBuilder } from "discord.js";
 
 export default createCommand(
@@ -23,8 +23,8 @@ export default createCommand(
             n: 1,
             size: "1024x1024"
         });
-        const imageResponse = await fetch(response.data.data[0].url);
-        const resultAttachment = new AttachmentBuilder(imageResponse.body, { name: "result.png" });
-        await interaction.reply(inputFormatted, { file: [resultAttachment] });
+        const imageResponse = await fetch(response.data.data[0].url!);
+        const resultAttachment = new AttachmentBuilder(imageResponse.body!, { name: "result.png" });
+        await interaction.editReply({ content: inputFormatted, files: [resultAttachment] });
     }
 );
