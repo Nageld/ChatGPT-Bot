@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import delay from "delay";
-import { chatgpt } from "../apis.js";
+import { conversation } from "../apis.js";
 import { createCommand } from "../utils.js";
 
 type QueueItem = { interaction: ChatInputCommandInteraction; input: string };
@@ -36,7 +36,7 @@ export const processQueueLoop = async () => {
                 .map((x) => `> ${x}`)
                 .join("\n");
             await interaction.editReply(`${inputFormatted}\nProcessing...`.substring(0, 2000));
-            const response = await chatgpt.sendMessage(input);
+            const response = await conversation.sendMessage(input);
             await interaction.editReply(`${inputFormatted}\n${response}`.substring(0, 2000));
         } else {
             await delay(1000);
