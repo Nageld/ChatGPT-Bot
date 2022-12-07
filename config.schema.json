@@ -25,6 +25,6 @@
             "description": "The session token for the bot to communicate with chatgpt"
         }
     },
-    "required": ["token", "openai", "clientId", "guildId"],
+    "required": ["token", "openai", "clientId", "guildId", "chatgpt"],
     "additionalProperties": false
 }
