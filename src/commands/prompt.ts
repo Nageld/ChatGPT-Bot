@@ -36,8 +36,12 @@ export const processQueueLoop = async () => {
                 .map((x) => `> ${x}`)
                 .join("\n");
             await interaction.editReply(`${inputFormatted}\nProcessing...`.substring(0, 2000));
-            const response = await conversation.sendMessage(input);
-            await interaction.editReply(`${inputFormatted}\n${response}`.substring(0, 2000));
+            try {
+                const response = await conversation.sendMessage(input);
+                await interaction.editReply(`${inputFormatted}\n${response}`.substring(0, 2000));
+            } catch {
+                await interaction.editReply(`${inputFormatted}\nFailed`.substring(0, 2000));
+            }
         } else {
             await delay(1000);
         }
