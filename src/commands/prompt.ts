@@ -34,12 +34,11 @@ export const processQueueLoop = async () => {
             await interaction.editReply({ embeds: [embed] });
             try {
                 const response = await conversation.sendMessage(input);
-                embed.addFields;
                 embed.setDescription(response.substring(0, 4096));
                 await interaction.editReply({ embeds: [embed] });
             } catch (error) {
                 console.error(error);
-                embed.setDescription("Failed.");
+                embed.setDescription("Failed");
                 await interaction.editReply({ embeds: [embed] });
             }
         } else {
