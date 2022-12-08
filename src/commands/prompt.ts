@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import delay from "delay";
 import { conversation } from "../apis.js";
 import { createCommand } from "../utils.js";
@@ -19,9 +19,10 @@ export default createCommand(
         const input = interaction.options.getString("input")!;
         const inputFormatted = input
             .split("\n")
-            .map((x) => `> ${x}`)
+            .map((x) => x)
             .join("\n");
-        await interaction.reply(inputFormatted.substring(0, 2000));
+        const initialEmbed = new EmbedBuilder().setTitle(inputFormatted).setImage("https://i.stack.imgur.com/Fzh0w.png")
+        await interaction.reply({ embeds: [initialEmbed] });
         queue.push({ input, interaction } as QueueItem);
     }
 );
@@ -33,14 +34,22 @@ export const processQueueLoop = async () => {
             const { input, interaction } = request;
             const inputFormatted = input
                 .split("\n")
-                .map((x) => `> ${x}`)
+                .map((x) => x)
                 .join("\n");
-            await interaction.editReply(`${inputFormatted}\nProcessing...`.substring(0, 2000));
+                const editedEmbed = new EmbedBuilder()
+                    .setTitle(inputFormatted)
+                    .setDescription("Processing...")
+                    .setImage("https://i.stack.imgur.com/Fzh0w.png")
+                await interaction.editReply({ embeds: [editedEmbed] });
             try {
                 const response = await conversation.sendMessage(input);
-                await interaction.editReply(`${inputFormatted}\n${response}`.substring(0, 2000));
-            } catch {
-                await interaction.editReply(`${inputFormatted}\nFailed`.substring(0, 2000));
+                editedEmbed.addFields
+                editedEmbed.setDescription(response.substring(0, 4096))
+                await interaction.editReply({ embeds: [editedEmbed] });
+            } catch (e) {
+                console.log(e)
+                editedEmbed.setDescription("Failed")
+                await interaction.editReply({ embeds: [editedEmbed] });
             }
         } else {
             await delay(1000);
