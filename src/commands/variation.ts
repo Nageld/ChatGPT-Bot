@@ -24,7 +24,6 @@ export default createCommand(
                 name: "result.png"
             });
             const embeds = new EmbedBuilder()
-                .setURL("https://gorp.com/")
                 .setImage("attachment://result.png")
                 .setTitle(input.substring(0, 256));
             await interaction.editReply({ embeds: [embeds], files: [afterAttachment] });
