@@ -15,10 +15,6 @@ export default createCommand(
         const input = interaction.options.getString("input")!;
         await interaction.deferReply();
         try {
-            const inputFormatted = input
-                .split("\n")
-                .map((x) => x)
-                .join("\n");
             const response = await openai.createImage({
                 prompt: input,
                 n: 1,
@@ -28,16 +24,13 @@ export default createCommand(
             const resultAttachment = new AttachmentBuilder(imageResponse.body!, {
                 name: "result.png"
             });
-            const embeds = [
-                new EmbedBuilder()
-                    .setURL("https://gorp.com/")
-                    .setImage("attachment://result.png")
-                    .setTitle(inputFormatted.substring(0, 255))
-            ];
-
-            await interaction.editReply({ embeds: embeds, files: [resultAttachment] });
-            // await interaction.editReply({ content: inputFormatted, files: [resultAttachment] });
-        } catch (e) {
+            const embed = new EmbedBuilder()
+                .setURL("https://gorp.com/")
+                .setImage("attachment://result.png")
+                .setTitle(input.substring(0, 256));
+            await interaction.editReply({ embeds: [embed], files: [resultAttachment] });
+        } catch (error) {
+            console.error(error);
             await interaction.editReply("Failed to generate image");
         }
     }

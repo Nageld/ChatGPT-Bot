@@ -23,17 +23,13 @@ export default createCommand(
             const afterAttachment = new AttachmentBuilder(imageResponse.body!, {
                 name: "result.png"
             });
-
-            const embeds = [
-                new EmbedBuilder()
-                    .setURL(input)
-                    .setImage("attachment://result.png")
-                    .setTitle(input.substring(0, 255))
-            ];
-
-            await interaction.editReply({ embeds: embeds, files: [afterAttachment] });
-        } catch (e) {
-            console.log(e);
+            const embeds = new EmbedBuilder()
+                .setURL("https://gorp.com/")
+                .setImage("attachment://result.png")
+                .setTitle(input.substring(0, 256));
+            await interaction.editReply({ embeds: [embeds], files: [afterAttachment] });
+        } catch (error) {
+            console.error(error);
             await interaction.editReply("Failed to generate image");
         }
     }
