@@ -21,7 +21,9 @@ export default createCommand(
             .split("\n")
             .map((x) => x)
             .join("\n");
-        const initialEmbed = new EmbedBuilder().setTitle(inputFormatted).setImage("https://i.stack.imgur.com/Fzh0w.png")
+        const initialEmbed = new EmbedBuilder()
+            .setTitle(inputFormatted)
+            .setImage("https://i.stack.imgur.com/Fzh0w.png");
         await interaction.reply({ embeds: [initialEmbed] });
         queue.push({ input, interaction } as QueueItem);
     }
@@ -36,19 +38,19 @@ export const processQueueLoop = async () => {
                 .split("\n")
                 .map((x) => x)
                 .join("\n");
-                const editedEmbed = new EmbedBuilder()
-                    .setTitle(inputFormatted)
-                    .setDescription("Processing...")
-                    .setImage("https://i.stack.imgur.com/Fzh0w.png")
-                await interaction.editReply({ embeds: [editedEmbed] });
+            const editedEmbed = new EmbedBuilder()
+                .setTitle(inputFormatted)
+                .setDescription("Processing...")
+                .setImage("https://i.stack.imgur.com/Fzh0w.png");
+            await interaction.editReply({ embeds: [editedEmbed] });
             try {
                 const response = await conversation.sendMessage(input);
-                editedEmbed.addFields
-                editedEmbed.setDescription(response.substring(0, 4096))
+                editedEmbed.addFields;
+                editedEmbed.setDescription(response.substring(0, 4096));
                 await interaction.editReply({ embeds: [editedEmbed] });
             } catch (e) {
-                console.log(e)
-                editedEmbed.setDescription("Failed")
+                console.log(e);
+                editedEmbed.setDescription("Failed");
                 await interaction.editReply({ embeds: [editedEmbed] });
             }
         } else {

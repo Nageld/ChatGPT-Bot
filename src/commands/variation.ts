@@ -17,20 +17,16 @@ export default createCommand(
         try {
             const baseImage = await fetch(input);
             const file: any = baseImage.body!;
-            file.name = "output.png"
-            const response = await openai.createImageVariation(
-                file,
-                1,
-                "1024x1024"
-              );
+            file.name = "output.png";
+            const response = await openai.createImageVariation(file, 1, "1024x1024");
             const imageResponse = await fetch(response.data.data[0].url!);
             const resultAttachment = new AttachmentBuilder(imageResponse.body!, {
                 name: "result.png"
             });
-            
+
             await interaction.editReply({ files: [resultAttachment] });
-        } catch(e) {
-            console.log(e)
+        } catch (e) {
+            console.log(e);
             await interaction.editReply("Failed to generate image");
         }
     }
