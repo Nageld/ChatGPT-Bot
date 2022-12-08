@@ -1,7 +1,7 @@
 import { openai } from "../apis.js";
 import { createCommand } from "../utils.js";
 import fetch from "node-fetch";
-import { AttachmentBuilder } from "discord.js";
+import { AttachmentBuilder, EmbedBuilder } from "discord.js";
 
 export default createCommand(
     (builder) =>
@@ -17,7 +17,7 @@ export default createCommand(
         try {
             const inputFormatted = input
                 .split("\n")
-                .map((x) => `> ${x}`)
+                .map((x) => x)
                 .join("\n");
             const response = await openai.createImage({
                 prompt: input,
@@ -28,8 +28,16 @@ export default createCommand(
             const resultAttachment = new AttachmentBuilder(imageResponse.body!, {
                 name: "result.png"
             });
-            await interaction.editReply({ content: inputFormatted, files: [resultAttachment] });
-        } catch {
+            const embeds = [
+                new EmbedBuilder()
+                    .setURL("https://gorp.com/")
+                    .setImage("attachment://result.png")
+                    .setTitle(inputFormatted.substring(0, 255))
+            ];
+
+            await interaction.editReply({ embeds: embeds, files: [resultAttachment] });
+            // await interaction.editReply({ content: inputFormatted, files: [resultAttachment] });
+        } catch (e) {
             await interaction.editReply("Failed to generate image");
         }
     }

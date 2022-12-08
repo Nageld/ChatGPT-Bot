@@ -1,7 +1,7 @@
 import { openai } from "../apis.js";
 import { createCommand } from "../utils.js";
 import fetch from "node-fetch";
-import { AttachmentBuilder } from "discord.js";
+import { AttachmentBuilder, EmbedBuilder } from "discord.js";
 
 export default createCommand(
     (builder) =>
@@ -17,14 +17,21 @@ export default createCommand(
         try {
             const baseImage = await fetch(input);
             const file: any = baseImage.body!;
-            file.name = "output.png";
+            file.name = "before.png";
             const response = await openai.createImageVariation(file, 1, "1024x1024");
             const imageResponse = await fetch(response.data.data[0].url!);
-            const resultAttachment = new AttachmentBuilder(imageResponse.body!, {
+            const afterAttachment = new AttachmentBuilder(imageResponse.body!, {
                 name: "result.png"
             });
 
-            await interaction.editReply({ files: [resultAttachment] });
+            const embeds = [
+                new EmbedBuilder()
+                    .setURL(input)
+                    .setImage("attachment://result.png")
+                    .setTitle(input.substring(0, 255))
+            ];
+
+            await interaction.editReply({ embeds: embeds, files: [afterAttachment] });
         } catch (e) {
             console.log(e);
             await interaction.editReply("Failed to generate image");
