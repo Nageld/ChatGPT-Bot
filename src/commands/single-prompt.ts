@@ -1,4 +1,4 @@
-import { Embed, EmbedBuilder } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import { chatgpt } from "../apis.js";
 import { createCommand } from "../utils.js";
 
