@@ -1,7 +1,8 @@
 import { openai } from "../apis.js";
 import { createCommand } from "../utils.js";
 import fetch from "node-fetch";
-import { AttachmentBuilder, EmbedBuilder } from "discord.js";
+import { AttachmentBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
+import { addComponents } from "discord.js-components";
 
 export default createCommand(
     (builder) =>
@@ -26,7 +27,21 @@ export default createCommand(
             const embeds = new EmbedBuilder()
                 .setImage("attachment://result.png")
                 .setTitle(input.substring(0, 256));
-            await interaction.editReply({ embeds: [embeds], files: [afterAttachment] });
+            const components = addComponents({
+                type: "BUTTON",
+                options: [
+                    {
+                        customId: "variation",
+                        style: ButtonStyle.Primary,
+                        label: "Variation"
+                    }
+                ]
+            });
+            await interaction.editReply({
+                embeds: [embeds],
+                files: [afterAttachment],
+                components: components
+            });
         } catch (error: any) {
             console.error(error);
             interaction.editReply(error.toString());
