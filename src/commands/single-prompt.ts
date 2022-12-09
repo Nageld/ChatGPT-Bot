@@ -18,9 +18,9 @@ export default createCommand(
             const response = await chatgpt.sendMessage(input);
             embed.setDescription(response.substring(0, 4096));
             await interaction.editReply({ embeds: [embed] });
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            embed.setDescription("Failed");
+            embed.setDescription(error.toString());
             await interaction.editReply({ embeds: [embed] });
         }
     }

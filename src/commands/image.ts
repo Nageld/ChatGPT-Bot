@@ -28,9 +28,9 @@ export default createCommand(
                 .setImage("attachment://result.png")
                 .setTitle(input.substring(0, 256));
             await interaction.editReply({ embeds: [embed], files: [resultAttachment] });
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            await interaction.editReply("Failed to generate image");
+            interaction.editReply(error.toString());
         }
     }
 );
