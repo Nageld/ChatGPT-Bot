@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import delay from "delay";
 import { conversation } from "../apis.js";
 import { createCommand } from "../utils.js";
@@ -17,30 +17,29 @@ export default createCommand(
             ),
     async (interaction) => {
         const input = interaction.options.getString("input")!;
-        const inputFormatted = input
-            .split("\n")
-            .map((x) => `> ${x}`)
-            .join("\n");
-        await interaction.reply(inputFormatted.substring(0, 2000));
+        const embed = new EmbedBuilder().setTitle(input.substring(0, 256));
+        await interaction.reply({ embeds: [embed] });
         queue.push({ input, interaction } as QueueItem);
     }
 );
 
 export const processQueueLoop = async () => {
     do {
-        const request = queue.pop();
+        const request = queue.shift();
         if (request) {
             const { input, interaction } = request;
-            const inputFormatted = input
-                .split("\n")
-                .map((x) => `> ${x}`)
-                .join("\n");
-            await interaction.editReply(`${inputFormatted}\nProcessing...`.substring(0, 2000));
+            const embed = new EmbedBuilder()
+                .setTitle(input.substring(0, 256))
+                .setDescription("Processing...");
+            await interaction.editReply({ embeds: [embed] });
             try {
                 const response = await conversation.sendMessage(input);
-                await interaction.editReply(`${inputFormatted}\n${response}`.substring(0, 2000));
-            } catch {
-                await interaction.editReply(`${inputFormatted}\nFailed`.substring(0, 2000));
+                embed.setDescription(response.substring(0, 4096));
+                await interaction.editReply({ embeds: [embed] });
+            } catch (error) {
+                console.error(error);
+                embed.setDescription("Failed");
+                await interaction.editReply({ embeds: [embed] });
             }
         } else {
             await delay(1000);
