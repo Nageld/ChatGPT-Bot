@@ -18,7 +18,8 @@ export default createButton("variation", async (interaction: ButtonInteraction):
         });
         const embeds = new EmbedBuilder()
             .setImage("attachment://result.png")
-            .setTitle(input.substring(0, 256));
+            .setTitle(input.substring(0, 256))
+            .setColor("#ffab8a");
         const components = addComponents({
             type: "BUTTON",
             options: [
