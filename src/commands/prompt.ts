@@ -34,8 +34,8 @@ export const processQueueLoop = async () => {
                 .setColor("#ffab8a");
             await interaction.editReply({ embeds: [embed] });
             try {
-                const response = await conversation.sendMessage(input);
-                embed.setDescription(response.substring(0, 4096));
+                const response = (await conversation.sendMessage(input)).substring(0, 4096);
+                embed.setDescription(response).setFooter({ text: `length: ${response.length}` });
                 await interaction.editReply({ embeds: [embed] });
             } catch (error: any) {
                 console.error(error);

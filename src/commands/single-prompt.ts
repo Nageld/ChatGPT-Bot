@@ -15,8 +15,8 @@ export default createCommand(
         const embed = new EmbedBuilder().setTitle(input.substring(0, 256)).setColor("#ffab8a");
         await interaction.reply({ embeds: [embed] });
         try {
-            const response = await chatgpt.sendMessage(input);
-            embed.setDescription(response.substring(0, 4096));
+            const response = (await chatgpt.sendMessage(input)).substring(0, 4096);
+            embed.setDescription(response).setFooter({ text: `length: ${response.length}` });
             await interaction.editReply({ embeds: [embed] });
         } catch (error: any) {
             console.error(error);
