@@ -5,7 +5,7 @@ import { createButton } from "../utils.js";
 import { addComponents } from "discord.js-components";
 
 export default createButton("variation", async (interaction: ButtonInteraction): Promise<void> => {
-    const input = interaction.message.embeds.at(0)?.image?.url ?? "";
+    const input = interaction.message.embeds[0].image!.url;
     await interaction.deferReply();
     try {
         const baseImage = await fetch(input);
