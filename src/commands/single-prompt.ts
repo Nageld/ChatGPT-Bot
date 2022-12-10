@@ -12,7 +12,7 @@ export default createCommand(
             ),
     async (interaction) => {
         const input = interaction.options.getString("input")!;
-        const embed = new EmbedBuilder().setTitle(input.substring(0, 256));
+        const embed = new EmbedBuilder().setTitle(input.substring(0, 256)).setColor("#ffab8a");
         await interaction.reply({ embeds: [embed] });
         try {
             const response = await chatgpt.sendMessage(input);

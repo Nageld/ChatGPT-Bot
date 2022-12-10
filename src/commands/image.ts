@@ -27,7 +27,8 @@ export default createCommand(
             });
             const embed = new EmbedBuilder()
                 .setImage("attachment://result.png")
-                .setTitle(input.substring(0, 256));
+                .setTitle(input.substring(0, 256))
+                .setColor("#ffab8a");
             const components = addComponents({
                 type: "BUTTON",
                 options: [
