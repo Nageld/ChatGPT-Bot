@@ -1,10 +1,10 @@
 lockfileVersion: 5.4
 
 specifiers:
-    "@types/node": ^18.11.12
+    "@types/node": ^18.11.13
     "@typescript-eslint/eslint-plugin": ^5.46.0
     "@typescript-eslint/parser": ^5.46.0
-    chatgpt: ^2.0.5
+    chatgpt: ^2.0.6
     delay: ^5.0.0
     discord.js: ^14.7.1
     discord.js-components: ^14.0.3-fix
@@ -18,7 +18,7 @@ specifiers:
     typescript: ^4.9.4
 
 dependencies:
-    chatgpt: 2.0.5
+    chatgpt: 2.0.6
     delay: 5.0.0
     discord.js: 14.7.1
     discord.js-components: 14.0.3-fix
@@ -26,7 +26,7 @@ dependencies:
     openai: 3.1.0
 
 devDependencies:
-    "@types/node": 18.11.12
+    "@types/node": 18.11.13
     "@typescript-eslint/eslint-plugin": 5.46.0_5mle7isnkfgjmrghnnczirv6iy
     "@typescript-eslint/parser": 5.46.0_ha6vam6werchizxrnqvarmz2zu
     eslint: 8.29.0
@@ -230,10 +230,10 @@ packages:
             }
         dev: false
 
-    /@types/node/18.11.12:
+    /@types/node/18.11.13:
         resolution:
             {
-                integrity: sha512-FgD3NtTAKvyMmD44T07zz2fEf+OKwutgBCEVM8GcvMGVGaDktiLNTDvPwC/LUe3PinMW+X6CuLOF2Ui1mAlSXg==
+                integrity: sha512-IASpMGVcWpUsx5xBOrxMj7Bl8lqfuTY7FKAnPmu5cHkfQVWF8GulWS1jbRqA934qZL35xh5xN/+Xe/i26Bod4w==
             }
 
     /@types/semver/7.3.13:
@@ -256,7 +256,7 @@ packages:
                 integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==
             }
         dependencies:
-            "@types/node": 18.11.12
+            "@types/node": 18.11.13
         dev: false
 
     /@typescript-eslint/eslint-plugin/5.46.0_5mle7isnkfgjmrghnnczirv6iy:
@@ -610,10 +610,10 @@ packages:
             }
         dev: false
 
-    /chatgpt/2.0.5:
+    /chatgpt/2.0.6:
         resolution:
             {
-                integrity: sha512-eVswcmvAfYcYh3TK8ryP7305lnvUJXM4CTLayEtFoS25Ovd9mNsOYJPWYLa/B10+ClEOWpeRe1cLR9VssY6STQ==
+                integrity: sha512-DTNAZ1Hdg3Oqupvvh0yTfwaOofFTuXiujFYJz9aQfQwnINn/ZbJRp66a79fArw7Vo7WIsxuW2FBH5KdpirrO3A==
             }
         engines: { node: ">=16.8" }
         dependencies:
