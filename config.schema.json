@@ -23,6 +23,14 @@
         "chatgpt": {
             "type": "string",
             "description": "The session token for the bot to communicate with chatgpt"
+        },
+        "cloudflare": {
+            "type": "string",
+            "description": "The cloudflare token"
+        },
+        "userAgent": {
+            "type": "string",
+            "description": "The user agent from the browser used to generate the token"
         }
     },
     "required": ["token", "openai", "clientId", "guildId", "chatgpt"],
