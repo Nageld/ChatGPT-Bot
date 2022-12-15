@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { chatgpt } from "../apis.js";
+import { openai } from "../apis.js";
 import { createCommand } from "../utils.js";
 
 export default createCommand(
@@ -15,11 +15,29 @@ export default createCommand(
         const embed = new EmbedBuilder().setTitle(input.substring(0, 256)).setColor("#ffab8a");
         await interaction.reply({ embeds: [embed] });
         try {
-            const response = await chatgpt.sendMessage(input);
-            embed
-                .setDescription(response.substring(0, 4096))
-                .setFooter({ text: `untruncated length: ${response.length}` });
-            await interaction.editReply({ embeds: [embed] });
+            const response = await openai.createCompletion({
+                model: "text-curie-001",
+                prompt: input,
+                temperature: 0,
+                max_tokens: 500,
+                top_p: 1,
+                frequency_penalty: 0.0,
+                presence_penalty: 0.0
+            });
+            console.log(response.data);
+            if (!response.data.choices[0].text) {
+                embed.setDescription("failed".substring(0, 4096));
+                await interaction.editReply({ embeds: [embed] });
+            } else {
+                const output =
+                    response.data.choices[0].text.length > 0
+                        ? response.data.choices[0].text
+                        : "empty";
+                embed.setDescription(output.substring(0, 4096)).setFooter({
+                    text: `untruncated length: ${output.length}, tokens: ${response.data.usage?.total_tokens}`
+                });
+                await interaction.editReply({ embeds: [embed] });
+            }
         } catch (error: any) {
             console.error(error);
             embed.setDescription(error.toString());
