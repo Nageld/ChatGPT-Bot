@@ -9,12 +9,36 @@ export default createCommand(
             .setDescription("Send a prompt to generate music")
             .addStringOption((option) =>
                 option.setName("input").setRequired(true).setDescription("The prompt")
+            )
+            .addStringOption((option) =>
+                option
+                    .setName("seed")
+                    .setRequired(false)
+                    .setDescription("The seed image")
+                    .addChoices({ name: "og_beat", value: "og_beat" })
+                    .addChoices({ name: "agile", value: "agile" })
+                    .addChoices({ name: "marim", value: "marim" })
+                    .addChoices({ name: "motorway", value: "motorway" })
+                    .addChoices({ name: "vibes", value: "vibes" })
+            )
+            .addStringOption((option) =>
+                option
+                    .setName("denoise")
+                    .setRequired(false)
+                    .setDescription("The tempo (Enter a decimal please)")
             ),
     async (interaction) => {
         const input = interaction.options.getString("input")!;
+        const seed = interaction.options.getString("seed")!
+            ? interaction.options.getString("seed")?.toLowerCase()
+            : "og_beat";
+        const denoise = interaction.options.getString("denoise")!
+            ? interaction.options.getString("denoise")!
+            : ".75";
         const embed = new EmbedBuilder().setTitle(input.substring(0, 256)).setColor("#ffab8a");
         await interaction.deferReply();
         try {
+            const tempo = parseFloat(denoise);
             const first = await fetch("https://www.riffusion.com/api/baseten", {
                 method: "POST",
                 headers: {
@@ -33,7 +57,7 @@ export default createCommand(
                     "user-agent":
                         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
                 },
-                body: `{"worklet_input":{"alpha":1,"num_inference_steps":50,"seed_image_id":"og_beat","mask_image_id":null,"start":{"prompt":"${input}","seed":51209,"denoising":0.75,"guidance":7},"end":{"prompt":"${input}","seed":51210,"denoising":0.75,"guidance":7}}}`
+                body: `{"worklet_input":{"alpha":1,"num_inference_steps":50,"seed_image_id":"${seed}","mask_image_id":null,"start":{"prompt":"${input}","seed":0,"denoising":${tempo},"guidance":7},"end":{"prompt":"${input}","seed":1,"denoising":${tempo},"guidance":7}}}`
             });
             let data: any;
             if (first.size == 0) {
@@ -56,23 +80,30 @@ export default createCommand(
                         "user-agent":
                             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
                     },
-                    body: `{"worklet_input":{"alpha":1,"num_inference_steps":50,"seed_image_id":"og_beat","mask_image_id":null,"start":{"prompt":"${input}","seed":51209,"denoising":0.75,"guidance":7},"end":{"prompt":"${input}","seed":51210,"denoising":0.75,"guidance":7}}}`
+                    body: `{"worklet_input":{"alpha":1,"num_inference_steps":50,"seed_image_id":"${seed}","mask_image_id":null,"start":{"prompt":"${input}","seed":0,"denoising":${tempo},"guidance":7},"end":{"prompt":"${input}","seed":1,"denoising":${tempo},"guidance":7}}}`
                 });
                 data = await response.json();
                 let temp = JSON.parse(data.data.worklet_output.model_output);
                 temp = temp["audio"].split(",");
-                data = Buffer.from(temp[1], 'base64');
-                console.log(temp);
+                data = Buffer.from(temp[1], "base64");
                 data = new AttachmentBuilder(data!, {
-                    name: "music.mp3"
+                    name: `${input}-${seed}.mp3`
+                });
+            } else {
+                data = await first.json();
+                let temp = JSON.parse(data.data.worklet_output.model_output);
+                temp = temp["audio"].split(",");
+                data = Buffer.from(temp[1], "base64");
+                data = new AttachmentBuilder(data!, {
+                    name: `${input}-${seed}.mp3`
                 });
             }
             if (!data) {
                 embed.setDescription("failed".substring(0, 4096));
                 await interaction.editReply({ embeds: [embed] });
             } else {
-                embed.setDescription("test");
-                await interaction.editReply({ embeds: [embed], files: [data] });
+                embed.setDescription("Sent");
+                await interaction.editReply({ files: [data] });
             }
         } catch (error: any) {
             console.error(error);
