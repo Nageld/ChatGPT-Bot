@@ -61,7 +61,7 @@ export default createCommand(
                 data = await response.json();
                 let temp = JSON.parse(data.data.worklet_output.model_output);
                 temp = temp["audio"].split(",");
-                data = Buffer.from(temp[1]);
+                data = Buffer.from(temp[1], 'base64');
                 console.log(temp);
                 data = new AttachmentBuilder(data!, {
                     name: "music.mp3"
