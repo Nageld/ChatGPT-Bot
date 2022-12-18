@@ -1,11 +1,12 @@
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import delay from "delay";
-import { conversation } from "../apis.js";
+import { openai } from "../apis.js";
 import { createCommand } from "../utils.js";
 
 type QueueItem = { interaction: ChatInputCommandInteraction; input: string };
 
 const queue: QueueItem[] = [];
+export const messages: string[] = [];
 
 export default createCommand(
     (builder) =>
@@ -33,13 +34,38 @@ export const processQueueLoop = async () => {
                 .setDescription("Processing...")
                 .setColor("#ffab8a");
             await interaction.editReply({ embeds: [embed] });
+            if (messages.length >= 10) {
+                const response = await openai.createCompletion({
+                    model: "text-davinci-003",
+                    prompt:
+                        `Concisely Summarize the following conversation:\n` + messages.join("\n"),
+                    temperature: 0,
+                    max_tokens: 200,
+                    top_p: 1,
+                    frequency_penalty: 0.0,
+                    presence_penalty: 0.0
+                });
+                messages.length = 0;
+                messages.push(`Context: ${response.data.choices[0].text}`);
+            }
+            messages.push(`Question: ${input}`);
             try {
-                const response = await conversation.sendMessage(input);
-                embed
-                    .setDescription(response.substring(0, 4096))
-                    .setFooter({ text: `untruncated length: ${response.length}` });
+                const response = await openai.createCompletion({
+                    model: "text-davinci-003",
+                    prompt: messages.join("\n"),
+                    temperature: 0,
+                    max_tokens: 100,
+                    top_p: 1,
+                    frequency_penalty: 0.0,
+                    presence_penalty: 0.0
+                });
+                embed.setDescription(response.data.choices[0].text!.substring(0, 4096)).setFooter({
+                    text: `untruncated length: ${response.data.choices[0].text?.length}`
+                });
+                messages.push(`Answer: ${response.data.choices[0].text}`);
                 await interaction.editReply({ embeds: [embed] });
             } catch (error: any) {
+                messages.push(`Answer: `);
                 console.error(error);
                 embed.setDescription(error.toString());
                 await interaction.editReply({ embeds: [embed] });

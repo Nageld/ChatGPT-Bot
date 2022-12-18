@@ -1,13 +1,10 @@
-import { chatgpt } from "../apis.js";
-import { conversation } from "../apis.js";
+import { messages } from "./prompt.js";
 import { createCommand } from "../utils.js";
 
 export default createCommand(
     (builder) => builder.setName("reset").setDescription("Reset the bot's knowledge"),
     async (interaction) => {
-        const newConversation = chatgpt.getConversation();
-        conversation.conversationId = newConversation.conversationId;
-        conversation.parentMessageId = newConversation.parentMessageId;
+        messages.length = 0;
         await interaction.reply("The Eye has forgor.");
     }
 );

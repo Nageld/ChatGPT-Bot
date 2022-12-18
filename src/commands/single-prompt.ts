@@ -16,10 +16,10 @@ export default createCommand(
         await interaction.reply({ embeds: [embed] });
         try {
             const response = await openai.createCompletion({
-                model: "text-curie-001",
+                model: "text-davinci-003",
                 prompt: input,
                 temperature: 0,
-                max_tokens: 500,
+                max_tokens: 200,
                 top_p: 1,
                 frequency_penalty: 0.0,
                 presence_penalty: 0.0
