@@ -1,9 +1,0 @@
-version: "3"
-services:
-  chatgpt-bot:
-    image: wengj9/chatgpt-bot
-    restart: unless-stopped
-    volumes:
-      - ./config.json:/app/config.json:ro
-    environment:
-      - TZ=America/New_York
