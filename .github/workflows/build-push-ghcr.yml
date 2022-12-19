@@ -11,7 +11,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: ["main"]
+    branches: ["*"]
 
 env:
   REGISTRY: ghcr.io
@@ -41,7 +41,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=edge
+            # set latest tag for default branch
+            type=raw,value=latest,enable={{is_default_branch}}
             type=sha
 
       - name: Build and push Docker image
