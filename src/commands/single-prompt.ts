@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { openai } from "../apis.js";
+import { openai, singleTokens } from "../apis.js";
 import { createCommand } from "../utils.js";
 
 export default createCommand(
@@ -19,7 +19,7 @@ export default createCommand(
                 model: "text-davinci-003",
                 prompt: input,
                 temperature: 0,
-                max_tokens: 200,
+                max_tokens: singleTokens,
                 top_p: 1,
                 frequency_penalty: 0.0,
                 presence_penalty: 0.0

@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import delay from "delay";
-import { openai } from "../apis.js";
+import { openai, promptTokens, historySize } from "../apis.js";
 import { createCommand } from "../utils.js";
 
 type QueueItem = { interaction: ChatInputCommandInteraction; input: string };
@@ -34,13 +34,13 @@ export const processQueueLoop = async () => {
                 .setDescription("Processing...")
                 .setColor("#ffab8a");
             await interaction.editReply({ embeds: [embed] });
-            if (messages.length >= 10) {
+            if (messages.length >= historySize) {
                 const response = await openai.createCompletion({
                     model: "text-davinci-003",
                     prompt:
                         `Concisely Summarize the following conversation:\n` + messages.join("\n"),
                     temperature: 0,
-                    max_tokens: 200,
+                    max_tokens: promptTokens * 2,
                     top_p: 1,
                     frequency_penalty: 0.0,
                     presence_penalty: 0.0
@@ -54,7 +54,7 @@ export const processQueueLoop = async () => {
                     model: "text-davinci-003",
                     prompt: messages.join("\n"),
                     temperature: 0,
-                    max_tokens: 100,
+                    max_tokens: promptTokens,
                     top_p: 1,
                     frequency_penalty: 0.0,
                     presence_penalty: 0.0
@@ -62,7 +62,7 @@ export const processQueueLoop = async () => {
                 embed.setDescription(response.data.choices[0].text!.substring(0, 4096)).setFooter({
                     text: `untruncated length: ${response.data.choices[0].text?.length}`
                 });
-                messages.push(`Answer: ${response.data.choices[0].text}`);
+                messages.push(`${response.data.choices[0].text}`);
                 await interaction.editReply({ embeds: [embed] });
             } catch (error: any) {
                 messages.push(`Answer: `);
