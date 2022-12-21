@@ -1,12 +1,23 @@
-import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
+import { ChatInputCommandInteraction } from "discord.js";
 import delay from "delay";
 import { openai, promptTokens, historySize } from "../apis.js";
-import { createCommand } from "../utils.js";
+import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
 
 type QueueItem = { interaction: ChatInputCommandInteraction; input: string };
 
 const queue: QueueItem[] = [];
 export const messages: string[] = [];
+
+export const getPromptResponse = async (prompt: string) =>
+    await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt,
+        temperature: 0,
+        max_tokens: promptTokens * 2,
+        top_p: 1,
+        frequency_penalty: 0.0,
+        presence_penalty: 0.0
+    });
 
 export default createCommand(
     (builder) =>
@@ -18,7 +29,7 @@ export default createCommand(
             ),
     async (interaction) => {
         const input = interaction.options.getString("input")!;
-        const embed = new EmbedBuilder().setTitle(input.substring(0, 256)).setColor("#ffab8a");
+        const embed = createResponseEmbed(input);
         await interaction.reply({ embeds: [embed] });
         queue.push({ input, interaction } as QueueItem);
     }
@@ -27,51 +38,35 @@ export default createCommand(
 export const processQueueLoop = async () => {
     do {
         const request = queue.shift();
-        if (request) {
-            const { input, interaction } = request;
-            const embed = new EmbedBuilder()
-                .setTitle(input.substring(0, 256))
-                .setDescription("Processing...")
-                .setColor("#ffab8a");
-            await interaction.editReply({ embeds: [embed] });
-            if (messages.length >= historySize) {
-                const response = await openai.createCompletion({
-                    model: "text-davinci-003",
-                    prompt:
-                        `Concisely Summarize the following conversation:\n` + messages.join("\n"),
-                    temperature: 0,
-                    max_tokens: promptTokens * 2,
-                    top_p: 1,
-                    frequency_penalty: 0.0,
-                    presence_penalty: 0.0
-                });
-                messages.length = 0;
-                messages.push(`Context: ${response.data.choices[0].text}`);
-            }
-            messages.push(`Question: ${input}`);
-            try {
-                const response = await openai.createCompletion({
-                    model: "text-davinci-003",
-                    prompt: messages.join("\n"),
-                    temperature: 0,
-                    max_tokens: promptTokens,
-                    top_p: 1,
-                    frequency_penalty: 0.0,
-                    presence_penalty: 0.0
-                });
-                embed.setDescription(response.data.choices[0].text!.substring(0, 4096)).setFooter({
-                    text: `untruncated length: ${response.data.choices[0].text?.length}`
-                });
-                messages.push(`${response.data.choices[0].text}`);
-                await interaction.editReply({ embeds: [embed] });
-            } catch (error: any) {
-                messages.push(`Answer: `);
-                console.error(error);
-                embed.setDescription(error.toString());
-                await interaction.editReply({ embeds: [embed] });
-            }
-        } else {
+        if (!request) {
             await delay(1000);
+            continue;
+        }
+
+        const { input, interaction } = request;
+        let embed = createResponseEmbed(input).setDescription("Processing...");
+        await interaction.editReply({ embeds: [embed] });
+        if (messages.length >= historySize) {
+            const response = await getPromptResponse(
+                `Concisely Summarize the following conversation:\n` + messages.join("\n")
+            );
+            messages.length = 0;
+            messages.push(`Context: ${response.data.choices[0].text}`);
+        }
+        messages.push(`Question: ${input}`);
+        try {
+            const response = await getPromptResponse(messages.join("\n"));
+            const answer = response.data.choices[0].text!;
+            embed.setDescription(answer.substring(0, 4096)).setFooter({
+                text: `Untruncated Length: ${answer.length}}`
+            });
+            messages.push(answer);
+        } catch (error: any) {
+            messages.push(`Answer: `);
+            console.error(error);
+            embed = embedFailure(embed, error.toString());
+        } finally {
+            await interaction.editReply({ embeds: [embed] });
         }
     } while (true);
 };

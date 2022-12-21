@@ -1,6 +1,5 @@
-import { EmbedBuilder } from "discord.js";
-import { openai, singleTokens } from "../apis.js";
-import { createCommand } from "../utils.js";
+import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
+import { getPromptResponse } from "./prompt.js";
 
 export default createCommand(
     (builder) =>
@@ -12,35 +11,24 @@ export default createCommand(
             ),
     async (interaction) => {
         const input = interaction.options.getString("input")!;
-        const embed = new EmbedBuilder().setTitle(input.substring(0, 256)).setColor("#ffab8a");
+        let embed = createResponseEmbed(input);
         await interaction.reply({ embeds: [embed] });
         try {
-            const response = await openai.createCompletion({
-                model: "text-davinci-003",
-                prompt: input,
-                temperature: 0,
-                max_tokens: singleTokens,
-                top_p: 1,
-                frequency_penalty: 0.0,
-                presence_penalty: 0.0
-            });
-            console.log(response.data);
-            if (!response.data.choices[0].text) {
-                embed.setDescription("failed".substring(0, 4096));
-                await interaction.editReply({ embeds: [embed] });
-            } else {
-                const output =
-                    response.data.choices[0].text.length > 0
-                        ? response.data.choices[0].text
-                        : "empty";
+            const response = (await getPromptResponse(input)).data;
+            console.log(response);
+            const answer = response.choices[0]?.text;
+            if (answer) {
+                const output = answer.length === 0 ? "(Empty)" : answer;
                 embed.setDescription(output.substring(0, 4096)).setFooter({
-                    text: `untruncated length: ${output.length}, tokens: ${response.data.usage?.total_tokens}`
+                    text: `untruncated length: ${output.length}, tokens: ${response.usage?.total_tokens}`
                 });
-                await interaction.editReply({ embeds: [embed] });
+            } else {
+                embedFailure(embed);
             }
         } catch (error: any) {
             console.error(error);
-            embed.setDescription(error.toString());
+            embed = embedFailure(embed, error.toString());
+        } finally {
             await interaction.editReply({ embeds: [embed] });
         }
     }

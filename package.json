@@ -10,7 +10,7 @@
         "prettify": "prettier --write . --plugin-search-dir=. --ignore-unknown",
         "pm2": "pm2 start \"pnpm start\"",
         "lint": "eslint --cache . --fix",
-        "format": "pnpm lint && pnpm prettify",
+        "format": "pnpm prettify && pnpm lint",
         "prepare": "husky install"
     },
     "dependencies": {

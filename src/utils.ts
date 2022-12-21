@@ -1,4 +1,9 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, ButtonInteraction } from "discord.js";
+import {
+    SlashCommandBuilder,
+    ChatInputCommandInteraction,
+    ButtonInteraction,
+    EmbedBuilder
+} from "discord.js";
 import { readdirSync, readFileSync } from "fs";
 import { Command, Builder, Button } from "./types.js";
 
@@ -43,3 +48,9 @@ export const collectButtons = async () => {
     }
     return buttons;
 };
+
+export const createResponseEmbed = (input: string) =>
+    new EmbedBuilder().setTitle(input.substring(0, 256)).setColor("#ffab8a");
+
+export const embedFailure = (embed: EmbedBuilder, reason = "Unknown Error") =>
+    embed.setColor("Red").setDescription(`Failure: ${reason ?? "Unknown Error"}`);
