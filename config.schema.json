@@ -20,19 +20,27 @@
             "type": "string",
             "description": "The ID of the guild to use for the bot"
         },
-        "chatgpt": {
-            "type": "string",
-            "description": "The session token for the bot to communicate with chatgpt"
+        "singleTokens": {
+            "type": "integer",
+            "description": "The max amount of tokens for single-prompt"
         },
-        "cloudflare": {
-            "type": "string",
-            "description": "The cloudflare token"
+        "promptTokens": {
+            "type": "integer",
+            "description": "The max amount of tokens for prompt"
         },
-        "userAgent": {
-            "type": "string",
-            "description": "The user agent from the browser used to generate the token"
+        "historySize": {
+            "type": "integer",
+            "description": "The history size before prompt summarizes"
         }
     },
-    "required": ["token", "openai", "clientId", "guildId", "chatgpt"],
+    "required": [
+        "token",
+        "openai",
+        "clientId",
+        "guildId",
+        "singleTokens",
+        "promptTokens",
+        "historySize"
+    ],
     "additionalProperties": false
 }

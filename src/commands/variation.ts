@@ -1,8 +1,9 @@
 import { openai } from "../apis.js";
-import { createCommand } from "../utils.js";
+import { createCommand, createResponseEmbed } from "../utils.js";
 import fetch from "node-fetch";
-import { AttachmentBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
+import { AttachmentBuilder } from "discord.js";
 import { addComponents } from "discord.js-components";
+import { variationButton } from "./image.js";
 
 export default createCommand(
     (builder) =>
@@ -24,22 +25,10 @@ export default createCommand(
             const afterAttachment = new AttachmentBuilder(imageResponse.body!, {
                 name: "result.png"
             });
-            const embeds = new EmbedBuilder()
-                .setImage("attachment://result.png")
-                .setTitle(input.substring(0, 256))
-                .setColor("#ffab8a");
-            const components = addComponents({
-                type: "BUTTON",
-                options: [
-                    {
-                        customId: "variation",
-                        style: ButtonStyle.Primary,
-                        label: "Variation"
-                    }
-                ]
-            });
+            const embed = createResponseEmbed(input).setImage("attachment://result.png");
+            const components = addComponents(variationButton);
             await interaction.editReply({
-                embeds: [embeds],
+                embeds: [embed],
                 files: [afterAttachment],
                 components: components
             });

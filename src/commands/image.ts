@@ -1,8 +1,19 @@
 import { openai } from "../apis.js";
-import { createCommand } from "../utils.js";
+import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
 import fetch from "node-fetch";
-import { AttachmentBuilder, EmbedBuilder, ButtonStyle } from "discord.js";
-import { addComponents } from "discord.js-components";
+import { AttachmentBuilder, ButtonStyle } from "discord.js";
+import { addComponents, Button } from "discord.js-components";
+
+export const variationButton = {
+    type: "BUTTON",
+    options: [
+        {
+            customId: "variation",
+            style: ButtonStyle.Primary,
+            label: "Variation"
+        }
+    ]
+} as Button;
 
 export default createCommand(
     (builder) =>
@@ -25,20 +36,8 @@ export default createCommand(
             const resultAttachment = new AttachmentBuilder(imageResponse.body!, {
                 name: "result.png"
             });
-            const embed = new EmbedBuilder()
-                .setImage("attachment://result.png")
-                .setTitle(input.substring(0, 256))
-                .setColor("#ffab8a");
-            const components = addComponents({
-                type: "BUTTON",
-                options: [
-                    {
-                        customId: "variation",
-                        style: ButtonStyle.Primary,
-                        label: "Variation"
-                    }
-                ]
-            });
+            const embed = createResponseEmbed(input).setImage("attachment://result.png");
+            const components = addComponents(variationButton);
             await interaction.editReply({
                 embeds: [embed],
                 files: [resultAttachment],
@@ -46,7 +45,8 @@ export default createCommand(
             });
         } catch (error: any) {
             console.error(error);
-            interaction.editReply(error.toString());
+            const embed = embedFailure(createResponseEmbed(input));
+            interaction.editReply({ embeds: [embed] });
         }
     }
 );

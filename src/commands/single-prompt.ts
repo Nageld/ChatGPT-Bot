@@ -1,6 +1,5 @@
-import { EmbedBuilder } from "discord.js";
-import { chatgpt } from "../apis.js";
-import { createCommand } from "../utils.js";
+import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
+import { getPromptResponse } from "./prompt.js";
 
 export default createCommand(
     (builder) =>
@@ -12,17 +11,24 @@ export default createCommand(
             ),
     async (interaction) => {
         const input = interaction.options.getString("input")!;
-        const embed = new EmbedBuilder().setTitle(input.substring(0, 256)).setColor("#ffab8a");
+        let embed = createResponseEmbed(input);
         await interaction.reply({ embeds: [embed] });
         try {
-            const response = await chatgpt.sendMessage(input);
-            embed
-                .setDescription(response.substring(0, 4096))
-                .setFooter({ text: `untruncated length: ${response.length}` });
-            await interaction.editReply({ embeds: [embed] });
+            const response = (await getPromptResponse(input)).data;
+            console.log(response);
+            const answer = response.choices[0]?.text;
+            if (answer) {
+                const output = answer.length === 0 ? "(Empty)" : answer;
+                embed.setDescription(output.substring(0, 4096)).setFooter({
+                    text: `untruncated length: ${output.length}, tokens: ${response.usage?.total_tokens}`
+                });
+            } else {
+                embedFailure(embed);
+            }
         } catch (error: any) {
             console.error(error);
-            embed.setDescription(error.toString());
+            embed = embedFailure(embed, error.toString());
+        } finally {
             await interaction.editReply({ embeds: [embed] });
         }
     }
