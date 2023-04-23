@@ -4,7 +4,7 @@ FROM node:lts
 WORKDIR /app
 
 # install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@7 --activate
 
 # Install requested packages
 COPY package.json pnpm-lock.yaml ./
