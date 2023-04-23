@@ -1,5 +1,6 @@
 import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
 import { getPromptResponse } from "./prompt.js";
+import { prompt } from "../apis.js";
 
 export default createCommand(
     (builder) =>
@@ -14,14 +15,11 @@ export default createCommand(
         let embed = createResponseEmbed(input);
         await interaction.reply({ embeds: [embed] });
         try {
-            const response = (await getPromptResponse(input)).data;
-            console.log(response);
-            const answer = response.choices[0]?.text;
+            const response = await getPromptResponse([prompt, { "role": "user", "content": `${input}` }]);
+            const answer = response.data.choices[0].message!.content;
             if (answer) {
                 const output = answer.length === 0 ? "(Empty)" : answer;
-                embed.setDescription(output.substring(0, 4096)).setFooter({
-                    text: `untruncated length: ${output.length}, tokens: ${response.usage?.total_tokens}`
-                });
+                embed.setDescription(output.substring(0, 4096))
             } else {
                 embedFailure(embed);
             }
