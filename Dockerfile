@@ -1,17 +1,38 @@
-FROM node:lts
+FROM node:lts AS builder
 
-# make workdir /ap
+# make workdir /app
 WORKDIR /app
 
 # install pnpm
-RUN corepack enable && corepack prepare pnpm@7 --activate
+RUN corepack enable && corepack prepare pnpm@v7.32.2 --activate
 
 # Install requested packages
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch
 
-# Copy app source, ignoring config.json
+# Copy app source and install dependencies
 COPY . .
+RUN pnpm install -r --offline --ignore-scripts
 
-# Run pnpm deploy-cmd, pnpm start
-CMD pnpm deploy-cmd; pnpm start
+# transpile to js
+RUN pnpm build
+
+FROM node:lts-alpine AS final
+
+# make workdir /app
+WORKDIR /app
+
+# install pnpm
+RUN corepack enable && corepack prepare pnpm@v7.32.2 --activate
+
+# Fetch production packages
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch --prod
+
+# copy transpiled code, install prod dependencies
+COPY --from=builder ./app/dist ./dist
+COPY package.json .
+RUN pnpm install -r --offline --prod --ignore-scripts
+
+# start server
+CMD cd dist && node deploy-commands.js && node .
