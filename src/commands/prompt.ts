@@ -12,7 +12,7 @@ export const messages: ChatCompletionRequestMessage[] = [prompt];
 export const getPromptResponse = async (prompt: ChatCompletionRequestMessage[]) =>
 
     await openai.createChatCompletion({
-        model: "gpt-4",
+        model: "gpt-4-turbo-preview",
         // model: "gpt-3.5-turbo-0301",
         max_tokens: promptTokens * 2,
         messages: prompt,
