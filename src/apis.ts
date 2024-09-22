@@ -9,3 +9,4 @@ export const promptTokens = config.promptTokens;
 export const historySize = config.historySize;
 export const huggingfaceKey = config.huggingface;
 export const prompt: ChatCompletionRequestMessage = {"role": "system", "content": "You are a discord bot that answers questions"};
+export const imageModel = {url: "https://api-inference.huggingface.co/models/XLabs-AI/flux-RealismLora"}

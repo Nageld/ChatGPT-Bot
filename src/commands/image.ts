@@ -1,4 +1,4 @@
-import { huggingfaceKey } from "../apis.js";
+import { huggingfaceKey, imageModel } from "../apis.js";
 import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
 import fetch from "node-fetch";
 import { AttachmentBuilder, ButtonStyle } from "discord.js";
@@ -47,7 +47,7 @@ export default createCommand(
             )    .addStringOption((option) => option.setName("model").setRequired(false).setDescription("The model url")),
     async (interaction) => {
         const input = interaction.options.getString("input")!;
-        const seed = interaction.options.getString("model")?.toLowerCase() ?? "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
+        const seed = interaction.options.getString("model")?.toLowerCase() ?? imageModel.url;
         await interaction.deferReply();
         try {
             const response = await getContent(input, seed)
