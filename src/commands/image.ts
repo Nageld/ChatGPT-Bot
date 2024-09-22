@@ -1,4 +1,4 @@
-import { openai } from "../apis.js";
+import { huggingfaceKey } from "../apis.js";
 import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
 import fetch from "node-fetch";
 import { AttachmentBuilder, ButtonStyle } from "discord.js";
@@ -15,6 +15,28 @@ export const variationButton = {
     ]
 } as Button;
 
+
+
+async function getContent(data: any, model: any) {
+
+    let data2 ={
+        inputs : data,
+        options : {
+            use_cache : false,
+            wait_for_model : true,
+        }
+    };
+    
+	let response = await fetch(model, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ` + huggingfaceKey
+        },
+        body: JSON.stringify(data2)
+    });
+    return response
+}
 export default createCommand(
     (builder) =>
         builder
@@ -22,26 +44,23 @@ export default createCommand(
             .setDescription("Prompt for the bot")
             .addStringOption((option) =>
                 option.setName("input").setRequired(true).setDescription("The image description")
-            ),
+            )    .addStringOption((option) => option.setName("model").setRequired(false).setDescription("The model url")),
     async (interaction) => {
         const input = interaction.options.getString("input")!;
+        const seed = interaction.options.getString("model")?.toLowerCase() ?? "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
         await interaction.deferReply();
         try {
-            const response = await openai.createImage({
-                prompt: input,
-                n: 1,
-                size: "1024x1024"
-            });
-            const imageResponse = await fetch(response.data.data[0].url!);
-            const resultAttachment = new AttachmentBuilder(imageResponse.body!, {
+            const response = await getContent(input, seed)
+            if (!response.ok) {
+                console.log(response)
+            }
+            const resultAttachment = new AttachmentBuilder(response.body!, {
                 name: "result.png"
             });
             const embed = createResponseEmbed(input).setImage("attachment://result.png");
-            const components = addComponents(variationButton);
             await interaction.editReply({
                 embeds: [embed],
                 files: [resultAttachment],
-                components: components
             });
         } catch (error: any) {
             console.error(error);

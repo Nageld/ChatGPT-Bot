@@ -12,8 +12,7 @@ export const messages: ChatCompletionRequestMessage[] = [prompt];
 export const getPromptResponse = async (prompt: ChatCompletionRequestMessage[]) =>
 
     await openai.createChatCompletion({
-        model: "gpt-4-turbo-preview",
-        // model: "gpt-3.5-turbo-0301",
+        model: "gpt-4o-mini",
         max_tokens: promptTokens * 2,
         messages: prompt,
     });
@@ -46,7 +45,7 @@ export const processQueueLoop = async () => {
         let embed = createResponseEmbed(input).setDescription("Processing...");
         await interaction.editReply({ embeds: [embed] });
         if (messages.length >= historySize) {
-            let temp: ChatCompletionRequestMessage = { "role": "assistant", "content": `Concisely Summarize the following conversation` }
+            const temp: ChatCompletionRequestMessage = { "role": "assistant", "content": `Concisely Summarize the following conversation` }
             messages.unshift(temp)
             const response = await getPromptResponse(
                 messages
