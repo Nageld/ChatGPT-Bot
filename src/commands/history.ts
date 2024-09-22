@@ -1,15 +1,11 @@
-import { messages } from "./prompt.js";
+import { prompt } from "../apis.js";
 import { createCommand, createResponseEmbed } from "../utils.js";
 
 export default createCommand(
-    (builder) => builder.setName("history").setDescription("See the bot's current knowledge"),
+    (builder) => builder.setName("getprompt").setDescription("See the bot's current prompt"),
     async (interaction) => {
-        const embed = createResponseEmbed("History");
-        if (messages.length === 0) {
-            embed.setDescription("No history");
-        } else {
-            embed.setDescription(messages.join("\n").substring(0, 4096));
-        }
+        const embed = createResponseEmbed("The current prompt is:");
+            embed.setDescription(prompt.content);
         await interaction.reply({ embeds: [embed] });
     }
 );

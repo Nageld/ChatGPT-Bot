@@ -14,23 +14,23 @@
         "prepare": "husky install"
     },
     "dependencies": {
-        "chatgpt": "^2.1.1",
+        "chatgpt": "^2.5.2",
         "delay": "^5.0.0",
-        "discord.js": "^14.7.1",
-        "discord.js-components": "^14.0.3-fix",
-        "node-fetch": "^3.3.0",
-        "openai": "^3.1.0"
+        "discord.js": "^14.8.0",
+        "discord.js-components": "14.0.3-fix",
+        "node-fetch": "^3.3.1",
+        "openai": "^3.2.1"
     },
     "devDependencies": {
-        "@types/node": "^18.11.13",
-        "@typescript-eslint/eslint-plugin": "^5.46.0",
-        "@typescript-eslint/parser": "^5.46.0",
-        "eslint": "^8.29.0",
-        "eslint-config-prettier": "^8.5.0",
-        "husky": "^8.0.2",
-        "lint-staged": "^13.1.0",
-        "prettier": "^2.8.1",
-        "typescript": "^4.9.4"
+        "@types/node": "^18.15.11",
+        "@typescript-eslint/eslint-plugin": "^5.57.0",
+        "@typescript-eslint/parser": "^5.57.0",
+        "eslint": "^8.37.0",
+        "eslint-config-prettier": "^8.8.0",
+        "husky": "^8.0.3",
+        "lint-staged": "^13.2.0",
+        "prettier": "^2.8.7",
+        "typescript": "^4.9.5"
     },
     "lint-staged": {
         "*.{ts,json,yaml,yml}": "prettier --plugin-search-dir=. --ignore-unknown --write",

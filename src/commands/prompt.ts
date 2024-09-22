@@ -1,22 +1,20 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import delay from "delay";
-import { openai, promptTokens, historySize } from "../apis.js";
+import { openai, promptTokens, historySize, prompt } from "../apis.js";
 import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
+import { ChatCompletionRequestMessage } from "openai";
 
 type QueueItem = { interaction: ChatInputCommandInteraction; input: string };
 
 const queue: QueueItem[] = [];
-export const messages: string[] = [];
+export const messages: ChatCompletionRequestMessage[] = [prompt];
 
-export const getPromptResponse = async (prompt: string) =>
-    await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt,
-        temperature: 0,
+export const getPromptResponse = async (prompt: ChatCompletionRequestMessage[]) =>
+
+    await openai.createChatCompletion({
+        model: "gpt-4o-mini",
         max_tokens: promptTokens * 2,
-        top_p: 1,
-        frequency_penalty: 0.0,
-        presence_penalty: 0.0
+        messages: prompt,
     });
 
 export default createCommand(
@@ -47,22 +45,24 @@ export const processQueueLoop = async () => {
         let embed = createResponseEmbed(input).setDescription("Processing...");
         await interaction.editReply({ embeds: [embed] });
         if (messages.length >= historySize) {
+            const temp: ChatCompletionRequestMessage = { "role": "assistant", "content": `Concisely Summarize the following conversation` }
+            messages.unshift(temp)
             const response = await getPromptResponse(
-                `Concisely Summarize the following conversation:\n` + messages.join("\n")
+                messages
             );
             messages.length = 0;
-            messages.push(`Context: ${response.data.choices[0].text}`);
+            messages.push(prompt)
+            messages.push({ "role": "assistant", "content": `Context: ${response.data.choices[0].message!.content}` });
         }
-        messages.push(`Question: ${input}`);
+        messages.push({ "role": "user", "content": `${input}` });
         try {
-            const response = await getPromptResponse(messages.join("\n"));
-            const answer = response.data.choices[0].text!;
+            const response = await getPromptResponse(messages);
+            const answer = response.data.choices[0].message!.content;
             embed.setDescription(answer.substring(0, 4096)).setFooter({
-                text: `Untruncated Length: ${answer.length}}`
+                text: `Untruncated Length: ${answer.length}`
             });
-            messages.push(answer);
+            messages.push({ "role": "assistant", "content": answer });
         } catch (error: any) {
-            messages.push(`Answer: `);
             console.error(error);
             embed = embedFailure(embed, error.toString());
         } finally {
