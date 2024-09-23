@@ -2,16 +2,16 @@ import { ChatInputCommandInteraction } from "discord.js";
 import delay from "delay";
 import { openai, promptTokens, historySize, prompt } from "../apis.js";
 import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
-import { ChatCompletionRequestMessage } from "openai";
+import  {OpenAI}  from "openai";
 
 type QueueItem = { interaction: ChatInputCommandInteraction; input: string };
 
 const queue: QueueItem[] = [];
-export const messages: ChatCompletionRequestMessage[] = [prompt];
+export const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [prompt];
 
-export const getPromptResponse = async (prompt: ChatCompletionRequestMessage[]) =>
+export const getPromptResponse = async (prompt: OpenAI.Chat.ChatCompletionMessageParam[]) =>
 
-    await openai.createChatCompletion({
+    await openai.chat.completions.create({
         model: "gpt-4o-mini",
         max_tokens: promptTokens * 2,
         messages: prompt,
@@ -45,19 +45,19 @@ export const processQueueLoop = async () => {
         let embed = createResponseEmbed(input).setDescription("Processing...");
         await interaction.editReply({ embeds: [embed] });
         if (messages.length >= historySize) {
-            const temp: ChatCompletionRequestMessage = { "role": "assistant", "content": `Concisely Summarize the following conversation` }
+            const temp: OpenAI.Chat.ChatCompletionMessageParam = { "role": "assistant", "content": `Concisely Summarize the following conversation`, "refusal": null }
             messages.unshift(temp)
             const response = await getPromptResponse(
                 messages
             );
             messages.length = 0;
             messages.push(prompt)
-            messages.push({ "role": "assistant", "content": `Context: ${response.data.choices[0].message!.content}` });
+            messages.push({ "role": "assistant", "content": `Context: ${response.choices[0].message!.content}`, refusal: null });
         }
         messages.push({ "role": "user", "content": `${input}` });
         try {
             const response = await getPromptResponse(messages);
-            const answer = response.data.choices[0].message!.content;
+            const answer = response.choices[0].message!.content ? response.choices[0].message!.content : "failed"
             embed.setDescription(answer.substring(0, 4096)).setFooter({
                 text: `Untruncated Length: ${answer.length}`
             });

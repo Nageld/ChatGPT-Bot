@@ -16,7 +16,7 @@ export default createCommand(
         await interaction.reply({ embeds: [embed] });
         try {
             const response = await getPromptResponse([prompt, { "role": "user", "content": `${input}` }]);
-            const answer = response.data.choices[0].message!.content;
+            const answer = response.choices[0].message!.content;
             if (answer) {
                 const output = answer.length === 0 ? "(Empty)" : answer;
                 embed.setDescription(output.substring(0, 4096))

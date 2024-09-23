@@ -14,12 +14,11 @@
         "prepare": "husky install"
     },
     "dependencies": {
-        "chatgpt": "^2.5.2",
         "delay": "^5.0.0",
         "discord.js": "^14.8.0",
         "discord.js-components": "14.0.3-fix",
         "node-fetch": "^3.3.1",
-        "openai": "^3.2.1"
+        "openai": "^4.63.0"
     },
     "devDependencies": {
         "@types/node": "^18.15.11",

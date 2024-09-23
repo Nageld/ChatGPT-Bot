@@ -5,7 +5,7 @@ import { prompt } from "../apis.js";
 export default createCommand(
     (builder) =>
         builder
-            .setName("identufy")
+            .setName("identfy")
             .setDescription("Use the vision")
             .addStringOption((option) =>
                 option.setName("input").setRequired(true).setDescription("The prompt")
@@ -26,7 +26,7 @@ export default createCommand(
                 prompt,
                 {
                     "role": "user",
-                    "content": JSON.stringify([
+                    "content": [
                         { type: "text", text: `${input}` },
                         {
                             type: "image_url",
@@ -35,10 +35,10 @@ export default createCommand(
                                 "detail": "low"
                             }
                         }
-                    ])
+                    ]
                 }
             ]);
-            const answer = response.data.choices[0].message!.content;
+            const answer = response.choices[0].message!.content;
             if (answer) {
                 const output = answer.length === 0 ? "(Empty)" : answer;
                 embed.setDescription(output.substring(0, 4096))
