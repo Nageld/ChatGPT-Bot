@@ -4,7 +4,7 @@ FROM node:lts AS builder
 WORKDIR /app
 
 # install pnpm
-RUN corepack enable && corepack prepare pnpm@v7.32.2 --activate
+RUN corepack enable && corepack prepare pnpm@v9.10.0 --activate
 
 # Install requested packages
 COPY pnpm-lock.yaml ./
@@ -23,7 +23,7 @@ FROM node:lts-alpine AS final
 WORKDIR /app
 
 # install pnpm
-RUN corepack enable && corepack prepare pnpm@v7.32.2 --activate
+RUN corepack enable && corepack prepare pnpm@v9.10.0 --activate
 
 # Fetch production packages
 COPY pnpm-lock.yaml ./
