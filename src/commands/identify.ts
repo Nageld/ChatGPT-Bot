@@ -5,7 +5,7 @@ import { prompt } from "../apis.js";
 export default createCommand(
     (builder: any) =>
         builder
-            .setName("identfy")
+            .setName("identify")
             .setDescription("Use the vision")
             .addStringOption((option: any) =>
                 option.setName("input").setRequired(true).setDescription("The prompt")
@@ -42,6 +42,7 @@ export default createCommand(
             if (answer) {
                 const output = answer.length === 0 ? "(Empty)" : answer;
                 embed.setDescription(output.substring(0, 4096))
+                embed.setImage(image ?? "https://upload.wikimedia.org/wikipedia/commons/f/ff/Asparagus_soup_%28spargelsuppe%29.jpg");
             } else {
                 embedFailure(embed);
             }
