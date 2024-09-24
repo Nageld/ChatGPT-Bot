@@ -1,17 +1,13 @@
-import { ChatInputCommandInteraction } from "discord.js";
-import { openai, promptTokens, historySize, prompt } from "../apis.js";
-import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
+import { prompt } from "../apis.js";
+import { createCommand, createResponseEmbed } from "../utils.js";
 import { messages } from "./prompt.js";
 
-
-
-
 export default createCommand(
-    (builder) =>
+    (builder: any) =>
         builder
             .setName("setprompt")
             .setDescription("Set the prompt for the bot")
-            .addStringOption((option) =>
+            .addStringOption((option: any) =>
                 option.setName("input").setRequired(true).setDescription("The prompt")
             ),
     async (interaction) => {

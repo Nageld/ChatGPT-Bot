@@ -3,17 +3,17 @@ import { getPromptResponse } from "./prompt.js";
 import { prompt } from "../apis.js";
 
 export default createCommand(
-    (builder) =>
+    (builder: any) =>
         builder
             .setName("identfy")
             .setDescription("Use the vision")
-            .addStringOption((option) =>
+            .addStringOption((option: any) =>
                 option.setName("input").setRequired(true).setDescription("The prompt")
             )
-            .addStringOption((option) =>
+            .addStringOption((option: any) =>
                 option.setName("imageurl").setDescription("Link to image")
             )
-            .addAttachmentOption((option) =>
+            .addAttachmentOption((option: any) =>
                 option.setName("image").setDescription("image")
             ),
     async (interaction) => {

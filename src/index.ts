@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import { processQueueLoop } from "./commands/prompt.js";
-import { collectButtons, collectCommands, loadConfig } from "./utils.js";
+import {  collectCommands, loadConfig } from "./utils.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -8,7 +8,7 @@ const commands = Object.fromEntries(
     (await collectCommands()).map((command) => [command.data.name, command])
 );
 
-const buttons = Object.fromEntries((await collectButtons()).map((button) => [button.id, button]));
+// const buttons = Object.fromEntries((await collectButtons()).map((button) => [button.id, button]));
 
 client.once(Events.ClientReady, () => {
     console.log("Ready!");
@@ -21,12 +21,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
         if (!command) return;
 
         await command.execute(interaction);
-    } else if (interaction.isButton()) {
-        const button = buttons[interaction.customId];
-        if (!button) return;
-
-        await button.execute(interaction);
     }
+    //  else if (interaction.isButton()) {
+    //     const button = buttons[interaction.customId];
+    //     if (!button) return;
+
+    //     await button.execute(interaction);
+    // }
 });
 
 const config = loadConfig();

@@ -18,11 +18,11 @@ export const getPromptResponse = async (prompt: OpenAI.Chat.ChatCompletionMessag
     });
 
 export default createCommand(
-    (builder) =>
+    (builder: any) =>
         builder
             .setName("prompt")
             .setDescription("Prompt for the bot")
-            .addStringOption((option) =>
+            .addStringOption((option: any) =>
                 option.setName("input").setRequired(true).setDescription("The prompt")
             ),
     async (interaction) => {

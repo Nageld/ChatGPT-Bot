@@ -3,11 +3,11 @@ import { getPromptResponse } from "./prompt.js";
 import { prompt } from "../apis.js";
 
 export default createCommand(
-    (builder) =>
+    (builder: any) =>
         builder
             .setName("single-prompt")
             .setDescription("Send a prompt to a blank chatgpt instance")
-            .addStringOption((option) =>
+            .addStringOption((option: any) =>
                 option.setName("input").setRequired(true).setDescription("The prompt")
             ),
     async (interaction) => {

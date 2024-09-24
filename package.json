@@ -15,21 +15,23 @@
     },
     "dependencies": {
         "delay": "^5.0.0",
-        "discord.js": "^14.8.0",
-        "discord.js-components": "14.0.3-fix",
-        "node-fetch": "^3.3.1",
+        "discord.js": "^14.16.2",
+        "node-fetch": "^3.3.2",
         "openai": "^4.63.0"
     },
     "devDependencies": {
-        "@types/node": "^18.15.11",
-        "@typescript-eslint/eslint-plugin": "^5.57.0",
-        "@typescript-eslint/parser": "^5.57.0",
-        "eslint": "^8.37.0",
-        "eslint-config-prettier": "^8.8.0",
+        "@discordjs/builders": "^1.9.0",
+        "@discordjs/rest": "^2.4.0",
+        "@types/node": "^18.19.50",
+        "@typescript-eslint/eslint-plugin": "^5.62.0",
+        "@typescript-eslint/parser": "^5.62.0",
+        "eslint": "^8.57.1",
+        "eslint-config-prettier": "^8.10.0",
         "husky": "^8.0.3",
-        "lint-staged": "^13.2.0",
-        "prettier": "^2.8.7",
-        "typescript": "^4.9.5"
+        "lint-staged": "^13.3.0",
+        "prettier": "^2.8.8",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.6.2"
     },
     "lint-staged": {
         "*.{ts,json,yaml,yml}": "prettier --plugin-search-dir=. --ignore-unknown --write",

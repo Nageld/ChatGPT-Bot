@@ -39,15 +39,15 @@ export const createButton = (
     } as Button;
 };
 
-export const collectButtons = async () => {
-    const buttonFiles = readdirSync("./buttons").filter((file) => file.endsWith(".js"));
-    const buttons: Button[] = [];
-    for (const file of buttonFiles) {
-        const button = await import(`./buttons/${file}`);
-        buttons.push(button.default);
-    }
-    return buttons;
-};
+// export const collectButtons = async () => {
+//     const buttonFiles = readdirSync("./buttons").filter((file) => file.endsWith(".js"));
+//     const buttons: Button[] = [];
+//     for (const file of buttonFiles) {
+//         const button = await import(`./buttons/${file}`);
+//         buttons.push(button.default);
+//     }
+//     return buttons;
+// };
 
 export const createResponseEmbed = (input: string) =>
     new EmbedBuilder().setTitle(input.substring(0, 256)).setColor("#ffab8a");

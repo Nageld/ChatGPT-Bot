@@ -3,7 +3,7 @@ import { createCommand } from "../utils.js";
 import { prompt } from "../apis.js";
 
 export default createCommand(
-    (builder) => builder.setName("reset").setDescription("Reset the bot's knowledge"),
+    (builder: any) => builder.setName("reset").setDescription("Reset the bot's knowledge"),
     async (interaction) => {
         messages.length = 0;
         messages.push(prompt)      

@@ -2,15 +2,12 @@ import { imageModel } from "../apis.js";
 import { createCommand, createResponseEmbed } from "../utils.js";
 import { messages } from "./prompt.js";
 
-
-
-
 export default createCommand(
-    (builder) =>
+    (builder: any) =>
         builder
             .setName("setimage")
             .setDescription("Set the default image model for the bot")
-            .addStringOption((option) =>
+            .addStringOption((option: any) =>
                 option.setName("input").setRequired(true).setDescription("The model url")
             ),
     async (interaction) => {
