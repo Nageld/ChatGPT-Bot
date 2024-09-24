@@ -1,38 +1,41 @@
 import { huggingfaceKey, imageModel } from "../apis.js";
 import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
 import fetch from "node-fetch";
-import { AttachmentBuilder } from "discord.js";
+import { AttachmentBuilder, SlashCommandStringOption } from "discord.js";
+import { Builder } from "../types.js";
 
-async function getContent(data: any, model: any) {
-
-    let data2 ={
-        inputs : data,
-        options : {
-            use_cache : false,
-            wait_for_model : true,
+async function getContent(data: string, model: string) {
+    const data2 = {
+        inputs: data,
+        options: {
+            use_cache: false,
+            wait_for_model: true
         }
     };
-    
-	let response = await fetch(model, {
-        method: 'POST',
+
+    const response = await fetch(model, {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ` + huggingfaceKey
+            "Content-Type": "application/json",
+            Authorization: `Bearer ` + huggingfaceKey
         },
         body: JSON.stringify(data2)
     });
-    return response
+    return response;
 }
 export default createCommand(
-    (builder: any) =>
+    (builder: Builder) =>
         builder
             .setName("image")
             .setDescription("Prompt for the bot")
-            .addStringOption((option: any) =>
+            .addStringOption((option: SlashCommandStringOption) =>
                 option.setName("input").setRequired(true).setDescription("The image description")
-            )    .addStringOption((option: any) => option.setName("model").setRequired(false).setDescription("The model url")),
+            )
+            .addStringOption((option: SlashCommandStringOption) =>
+                option.setName("model").setRequired(false).setDescription("The model url")
+            ),
     async (interaction) => {
-        const input = interaction.options.getString("input")!;
+        const input = interaction.options.getString("input") ?? "N/A";
         const seed = interaction.options.getString("model")?.toLowerCase() ?? imageModel.url;
         await interaction.deferReply();
         try {
@@ -40,21 +43,21 @@ export default createCommand(
             if (!response.ok) {
                 console.log(response);
             }
-            const arrayBuffer = await response.arrayBuffer();  // Convert ReadableStream to ArrayBuffer
-            const buffer = Buffer.from(arrayBuffer);  // Convert ArrayBuffer to Buffer
+            const arrayBuffer = await response.arrayBuffer(); // Convert ReadableStream to ArrayBuffer
+            const buffer = Buffer.from(arrayBuffer); // Convert ArrayBuffer to Buffer
             const resultAttachment = new AttachmentBuilder(buffer, {
-                name: "result.png",
+                name: "result.png"
             });
             const embed = createResponseEmbed(input).setImage("attachment://result.png");
-            
+
             await interaction.editReply({
                 embeds: [embed],
-                files: [resultAttachment],
+                files: [resultAttachment]
             });
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
             const embed = embedFailure(createResponseEmbed(input));
-            interaction.editReply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
         }
     }
 );

@@ -3,10 +3,10 @@
     "private": true,
     "version": "0.0.1",
     "type": "module",
+    "packageManager": "pnpm@9.10.0",
     "scripts": {
         "build": "tsc",
-        "deploy-cmd": "tsc && cd dist && node deploy-commands.js",
-        "start": "tsc && cd dist && node .",
+        "start": "cd dist && node deploy-commands.js && node .",
         "prettify": "prettier --write . --plugin-search-dir=. --ignore-unknown",
         "pm2": "pm2 start \"pnpm start\"",
         "lint": "eslint --cache . --fix",
@@ -17,21 +17,26 @@
         "delay": "^5.0.0",
         "discord.js": "^14.16.2",
         "node-fetch": "^3.3.2",
-        "openai": "^4.63.0"
+        "openai": "^4.63.0",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@discordjs/builders": "^1.9.0",
         "@discordjs/rest": "^2.4.0",
+        "@eslint/js": "^9.11.1",
+        "@types/eslint__js": "^8.42.3",
         "@types/node": "^18.19.50",
         "@typescript-eslint/eslint-plugin": "^5.62.0",
         "@typescript-eslint/parser": "^5.62.0",
         "eslint": "^8.57.1",
         "eslint-config-prettier": "^8.10.0",
+        "eslint-plugin-unicorn": "^55.0.0",
         "husky": "^8.0.3",
         "lint-staged": "^13.3.0",
         "prettier": "^2.8.8",
         "ts-node": "^10.9.2",
-        "typescript": "^5.6.2"
+        "typescript": "^5.6.2",
+        "typescript-eslint": "^8.7.0"
     },
     "lint-staged": {
         "*.{ts,json,yaml,yml}": "prettier --plugin-search-dir=. --ignore-unknown --write",
