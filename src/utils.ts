@@ -17,7 +17,7 @@ export const createCommand = (
     return {
         data: build(new SlashCommandBuilder()),
         execute
-    } as Command;
+    };
 };
 
 export const collectCommands = async () => {
@@ -37,7 +37,7 @@ export const createButton = (
     return {
         id,
         execute
-    } as Button;
+    };
 };
 
 export const collectButtons = async () => {

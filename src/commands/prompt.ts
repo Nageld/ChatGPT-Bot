@@ -29,15 +29,15 @@ export default createCommand(
                 option.setName("input").setRequired(true).setDescription("The prompt")
             ),
     async (interaction) => {
-        const input = interaction.options.getString("input");
-        const embed = createResponseEmbed(input ?? "");
+        const input = interaction.options.getString("input") ?? "";
+        const embed = createResponseEmbed(input);
         await interaction.reply({ embeds: [embed] });
-        queue.push({ input, interaction } as QueueItem);
+        queue.push({ input, interaction });
     }
 );
 
 export const processQueueLoop = async () => {
-    do {
+    for (;;) {
         const request = queue.shift();
         if (!request) {
             await delay(1000);
@@ -78,6 +78,5 @@ export const processQueueLoop = async () => {
         } finally {
             await interaction.editReply({ embeds: [embed] });
         }
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
-    } while (true);
+    }
 };

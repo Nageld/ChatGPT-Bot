@@ -5,7 +5,7 @@ import { AttachmentBuilder, SlashCommandStringOption } from "discord.js";
 import { Builder } from "../types.js";
 
 async function getContent(data: string, model: string) {
-    const data2 = {
+    const requestData = {
         inputs: data,
         options: {
             use_cache: false,
@@ -19,7 +19,7 @@ async function getContent(data: string, model: string) {
             "Content-Type": "application/json",
             Authorization: `Bearer ` + huggingfaceKey
         },
-        body: JSON.stringify(data2)
+        body: JSON.stringify(requestData)
     });
     return response;
 }

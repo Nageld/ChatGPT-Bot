@@ -1,5 +1,6 @@
 import { REST, Routes } from "discord.js";
 import { collectCommands, loadConfig } from "./utils.js";
+import { z } from "zod";
 
 const config = loadConfig();
 
@@ -8,12 +9,18 @@ const commandMap = commands.map((command) => command.data);
 
 const rest = new REST({ version: "10" }).setToken(config.token);
 
+const guildCommandSchema = z.object({
+    length: z.number()
+});
+
 try {
     console.log(`Started refreshing ${commandMap.length.toString()} application (/) commands.`);
 
-    const data = (await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), {
-        body: commandMap
-    })) as { length: number };
+    const data = guildCommandSchema.parse(
+        await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), {
+            body: commandMap
+        })
+    );
 
     console.log(`Successfully reloaded ${data.length.toString()} application (/) commands.`);
 } catch (error) {
