@@ -1,34 +1,34 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { Client, Events, GatewayIntentBits, Interaction } from "discord.js";
 import { processQueueLoop } from "./commands/prompt.js";
-import { collectButtons, collectCommands, loadConfig } from "./utils.js";
+import { collectCommands, loadConfig } from "./utils.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-const commands = Object.fromEntries(
-    (await collectCommands()).map((command) => [command.data.name, command])
-);
+const commands = await collectCommands();
+const commandMap = Object.fromEntries(commands.map((command) => [command.data.name, command]));
 
-const buttons = Object.fromEntries((await collectButtons()).map((button) => [button.id, button]));
+// const buttons = await collectButtons();
+// const buttonMap = Object.fromEntries(buttons.map((button) => [button.id, button]));
 
-client.once(Events.ClientReady, () => {
+const clientReady = async () => {
     console.log("Ready!");
-    processQueueLoop();
-});
+    await processQueueLoop();
+};
 
-client.on(Events.InteractionCreate, async (interaction) => {
+client.once(Events.ClientReady, () => void clientReady());
+
+const interactionCreateCallback = async (interaction: Interaction) => {
     if (interaction.isChatInputCommand()) {
-        const command = commands[interaction.commandName];
-        if (!command) return;
+        const command = commandMap[interaction.commandName];
 
         await command.execute(interaction);
     } else if (interaction.isButton()) {
-        const button = buttons[interaction.customId];
-        if (!button) return;
-
-        await button.execute(interaction);
+        // const button = buttonMap[interaction.customId];
+        // await button.execute(interaction);
     }
-});
+};
+client.on(Events.InteractionCreate, (interaction) => void interactionCreateCallback(interaction));
 
 const config = loadConfig();
 
-client.login(config.token);
+await client.login(config.token);

@@ -1,71 +1,63 @@
-import { huggingfaceKey } from "../apis.js";
+import { huggingfaceKey, imageModel } from "../apis.js";
 import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
 import fetch from "node-fetch";
-import { AttachmentBuilder, ButtonStyle } from "discord.js";
-import { addComponents, Button } from "discord.js-components";
+import { AttachmentBuilder, SlashCommandStringOption } from "discord.js";
+import { Builder } from "../types.js";
 
-export const variationButton = {
-    type: "BUTTON",
-    options: [
-        {
-            customId: "variation",
-            style: ButtonStyle.Primary,
-            label: "Variation"
-        }
-    ]
-} as Button;
-
-
-
-async function getContent(data: any, model: any) {
-
-    let data2 ={
-        inputs : data,
-        options : {
-            use_cache : false,
-            wait_for_model : true,
+async function getContent(data: string, model: string) {
+    const requestData = {
+        inputs: data,
+        options: {
+            use_cache: false,
+            wait_for_model: true
         }
     };
-    
-	let response = await fetch(model, {
-        method: 'POST',
+
+    const response = await fetch(model, {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ` + huggingfaceKey
+            "Content-Type": "application/json",
+            Authorization: `Bearer ` + huggingfaceKey
         },
-        body: JSON.stringify(data2)
+        body: JSON.stringify(requestData)
     });
-    return response
+    return response;
 }
 export default createCommand(
-    (builder) =>
+    (builder: Builder) =>
         builder
             .setName("image")
             .setDescription("Prompt for the bot")
-            .addStringOption((option) =>
+            .addStringOption((option: SlashCommandStringOption) =>
                 option.setName("input").setRequired(true).setDescription("The image description")
-            )    .addStringOption((option) => option.setName("model").setRequired(false).setDescription("The model url")),
+            )
+            .addStringOption((option: SlashCommandStringOption) =>
+                option.setName("model").setRequired(false).setDescription("The model url")
+            ),
     async (interaction) => {
-        const input = interaction.options.getString("input")!;
-        const seed = interaction.options.getString("model")?.toLowerCase() ?? "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0";
+        const input = interaction.options.getString("input") ?? "N/A";
+        const seed = interaction.options.getString("model")?.toLowerCase() ?? imageModel.url;
         await interaction.deferReply();
         try {
-            const response = await getContent(input, seed)
+            const response = await getContent(input, seed);
             if (!response.ok) {
-                console.log(response)
+                console.log(response);
             }
-            const resultAttachment = new AttachmentBuilder(response.body!, {
+            const arrayBuffer = await response.arrayBuffer(); // Convert ReadableStream to ArrayBuffer
+            const buffer = Buffer.from(arrayBuffer); // Convert ArrayBuffer to Buffer
+            const resultAttachment = new AttachmentBuilder(buffer, {
                 name: "result.png"
             });
             const embed = createResponseEmbed(input).setImage("attachment://result.png");
+
             await interaction.editReply({
                 embeds: [embed],
-                files: [resultAttachment],
+                files: [resultAttachment]
             });
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
             const embed = embedFailure(createResponseEmbed(input));
-            interaction.editReply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed] });
         }
     }
 );

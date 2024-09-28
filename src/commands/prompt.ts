@@ -1,40 +1,43 @@
-import { ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandStringOption } from "discord.js";
 import delay from "delay";
 import { openai, promptTokens, historySize, prompt } from "../apis.js";
 import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
-import { ChatCompletionRequestMessage } from "openai";
+import { OpenAI } from "openai";
+import { Builder } from "../types.js";
 
-type QueueItem = { interaction: ChatInputCommandInteraction; input: string };
+interface QueueItem {
+    interaction: ChatInputCommandInteraction;
+    input: string;
+}
 
 const queue: QueueItem[] = [];
-export const messages: ChatCompletionRequestMessage[] = [prompt];
+export const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [prompt];
 
-export const getPromptResponse = async (prompt: ChatCompletionRequestMessage[]) =>
-
-    await openai.createChatCompletion({
+export const getPromptResponse = async (prompt: OpenAI.Chat.ChatCompletionMessageParam[]) =>
+    await openai.chat.completions.create({
         model: "gpt-4o-mini",
         max_tokens: promptTokens * 2,
-        messages: prompt,
+        messages: prompt
     });
 
 export default createCommand(
-    (builder) =>
+    (builder: Builder) =>
         builder
             .setName("prompt")
             .setDescription("Prompt for the bot")
-            .addStringOption((option) =>
+            .addStringOption((option: SlashCommandStringOption) =>
                 option.setName("input").setRequired(true).setDescription("The prompt")
             ),
     async (interaction) => {
-        const input = interaction.options.getString("input")!;
+        const input = interaction.options.getString("input") ?? "";
         const embed = createResponseEmbed(input);
         await interaction.reply({ embeds: [embed] });
-        queue.push({ input, interaction } as QueueItem);
+        queue.push({ input, interaction });
     }
 );
 
 export const processQueueLoop = async () => {
-    do {
+    for (;;) {
         const request = queue.shift();
         if (!request) {
             await delay(1000);
@@ -45,28 +48,35 @@ export const processQueueLoop = async () => {
         let embed = createResponseEmbed(input).setDescription("Processing...");
         await interaction.editReply({ embeds: [embed] });
         if (messages.length >= historySize) {
-            const temp: ChatCompletionRequestMessage = { "role": "assistant", "content": `Concisely Summarize the following conversation` }
-            messages.unshift(temp)
-            const response = await getPromptResponse(
-                messages
-            );
+            const temporary: OpenAI.Chat.ChatCompletionMessageParam = {
+                role: "assistant",
+                content: `Concisely Summarize the following conversation`,
+                refusal: undefined
+            };
+            messages.unshift(temporary);
+            const response = await getPromptResponse(messages);
             messages.length = 0;
-            messages.push(prompt)
-            messages.push({ "role": "assistant", "content": `Context: ${response.data.choices[0].message!.content}` });
+            messages.push(prompt, {
+                role: "assistant",
+                content: `Context: ${response.choices[0].message.content ?? ""}`,
+                refusal: undefined
+            });
         }
-        messages.push({ "role": "user", "content": `${input}` });
+        messages.push({ role: "user", content: input });
         try {
             const response = await getPromptResponse(messages);
-            const answer = response.data.choices[0].message!.content;
-            embed.setDescription(answer.substring(0, 4096)).setFooter({
-                text: `Untruncated Length: ${answer.length}`
+            const answer = response.choices[0].message.content ?? "failed";
+            embed.setDescription(answer.slice(0, 4096)).setFooter({
+                text: `Untruncated Length: ${answer.length.toString()}`
             });
-            messages.push({ "role": "assistant", "content": answer });
-        } catch (error: any) {
+            messages.push({ role: "assistant", content: answer });
+        } catch (error: unknown) {
             console.error(error);
-            embed = embedFailure(embed, error.toString());
+            if (error instanceof Error) {
+                embed = embedFailure(embed, error.toString());
+            }
         } finally {
             await interaction.editReply({ embeds: [embed] });
         }
-    } while (true);
+    }
 };

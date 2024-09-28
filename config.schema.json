@@ -10,7 +10,7 @@
         },
         "openai": {
             "type": "string",
-            "description": "The OpenAI API key to use to generate image responses"
+            "description": "The OpenAI API key to use to generate responses"
         },
         "clientId": {
             "type": "string",
@@ -31,6 +31,10 @@
         "historySize": {
             "type": "integer",
             "description": "The history size before prompt summarizes"
+        },
+        "huggingface": {
+            "type": "string",
+            "description": "The HuggingFace API key to use to generate image responses"
         }
     },
     "required": [
@@ -40,7 +44,8 @@
         "guildId",
         "singleTokens",
         "promptTokens",
-        "historySize"
+        "historySize",
+        "huggingface"
     ],
     "additionalProperties": false
 }
