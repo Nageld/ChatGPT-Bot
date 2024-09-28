@@ -9,9 +9,7 @@ const commandMap = commands.map((command) => command.data);
 
 const rest = new REST({ version: "10" }).setToken(config.token);
 
-const guildCommandSchema = z.object({
-    length: z.number()
-});
+const guildCommandSchema = z.array(z.unknown());
 
 try {
     console.log(`Started refreshing ${commandMap.length.toString()} application (/) commands.`);
