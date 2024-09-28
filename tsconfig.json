@@ -10,5 +10,6 @@
         "incremental": true,
         "isolatedModules": true
     },
-    "include": ["src/", "eslint.config.mjs"]
+    "include": ["src/", "eslint.config.mjs"],
+    "exclude": ["dist/"]
 }
