@@ -1,5 +1,5 @@
 import { REST, Routes } from "discord.js";
-import { collectCommands, loadConfig } from "./utils.js";
+import { collectCommands, loadConfig } from "./utilities.js";
 import { z } from "zod";
 
 const config = loadConfig();

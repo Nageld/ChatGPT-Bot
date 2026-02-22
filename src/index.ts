@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits, Interaction } from "discord.js";
 import { processQueueLoop } from "./commands/prompt.js";
-import { collectCommands, loadConfig } from "./utils.js";
+import { collectCommands, loadConfig } from "./utilities.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 

@@ -1,5 +1,5 @@
 import { OpenAI } from "openai";
-import { loadConfig } from "./utils.js";
+import { loadConfig } from "./utilities.js";
 
 const config = loadConfig();
 

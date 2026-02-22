@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandStringOption } from "discord.js";
 import delay from "delay";
 import { openai, promptTokens, historySize, prompt } from "../apis.js";
-import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
+import { createCommand, createResponseEmbed, embedFailure } from "../utilities.js";
 import { OpenAI } from "openai";
 import { Builder } from "../types.js";
 

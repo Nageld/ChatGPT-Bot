@@ -1,4 +1,4 @@
-import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
+import { createCommand, createResponseEmbed, embedFailure } from "../utilities.js";
 import { getPromptResponse } from "./prompt.js";
 import { prompt } from "../apis.js";
 import { Builder } from "../types.js";

@@ -1,7 +1,7 @@
 import { SlashCommandStringOption } from "discord.js";
 import { prompt } from "../apis.js";
 import { Builder } from "../types.js";
-import { createCommand, createResponseEmbed } from "../utils.js";
+import { createCommand, createResponseEmbed } from "../utilities.js";
 import { messages } from "./prompt.js";
 
 export default createCommand(

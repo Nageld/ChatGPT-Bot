@@ -1,5 +1,5 @@
 import { huggingfaceKey, imageModel } from "../apis.js";
-import { createCommand, createResponseEmbed, embedFailure } from "../utils.js";
+import { createCommand, createResponseEmbed, embedFailure } from "../utilities.js";
 import fetch from "node-fetch";
 import { AttachmentBuilder, SlashCommandStringOption } from "discord.js";
 import { Builder } from "../types.js";

@@ -1,5 +1,5 @@
 import { messages } from "./prompt.js";
-import { createCommand } from "../utils.js";
+import { createCommand } from "../utilities.js";
 import { prompt } from "../apis.js";
 import { Builder } from "../types.js";
 
