@@ -15,8 +15,8 @@ export const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [prompt];
 
 export const getPromptResponse = async (prompt: OpenAI.Chat.ChatCompletionMessageParam[]) =>
     await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        max_tokens: promptTokens * 2,
+        model: "gpt-5.2",
+        max_completion_tokens: promptTokens * 2,
         messages: prompt
     });
 
