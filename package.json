@@ -36,7 +36,7 @@
         "prettier": "^3.8.3",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.56.0"
+        "typescript-eslint": "^8.60.0"
     },
     "lint-staged": {
         "*.{ts,json,yaml,yml}": "prettier --plugin-search-dir=. --ignore-unknown --write",
